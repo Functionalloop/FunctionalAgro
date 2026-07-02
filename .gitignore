@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment variables — NEVER COMMIT YOUR KEYS
+.env
+*.env.local
+
+# Database
+backend/functionalagro.db
+*.db
+*.sqlite3
+
+# ML model weights — large files, download separately
+models/*.pt
+models/*.h5
+models/*.pkl
+models/*.bin
+
+# TTS audio output (generated at runtime)
+static/audio/*.mp3
+
+# Frontend build
+frontend/dist/
+frontend/node_modules/
+frontend/.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

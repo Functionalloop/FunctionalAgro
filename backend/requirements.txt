@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pillow
+torch
+torchvision
+transformers
+google-generativeai
+requests
+python-multipart
+deep-translator
+gTTS
+python-dotenv
+openpyxl

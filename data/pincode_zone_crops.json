@@ -1,0 +1,102 @@
+{
+  "560001": {
+    "zone": "Southern Plateau and Hills",
+    "district": "Bangalore Urban",
+    "state": "Karnataka",
+    "suitable_crops": ["Ragi", "Groundnut", "Sunflower", "Maize", "Cotton", "Tomato"],
+    "rainfall_mm": "800-1000",
+    "soil_type": "Red Laterite",
+    "lat": 12.9716,
+    "lng": 77.5946
+  },
+  "400001": {
+    "zone": "West Coast Plains and Ghats",
+    "district": "Mumbai",
+    "state": "Maharashtra",
+    "suitable_crops": ["Rice", "Coconut", "Cashew", "Banana", "Sugarcane", "Mango"],
+    "rainfall_mm": "2000-2500",
+    "soil_type": "Laterite",
+    "lat": 18.9388,
+    "lng": 72.8354
+  },
+  "110001": {
+    "zone": "Trans-Gangetic Plain",
+    "district": "Central Delhi",
+    "state": "Delhi",
+    "suitable_crops": ["Wheat", "Mustard", "Sugarcane", "Rice", "Potato", "Onion"],
+    "rainfall_mm": "600-800",
+    "soil_type": "Alluvial",
+    "lat": 28.6139,
+    "lng": 77.2090
+  },
+  "600001": {
+    "zone": "East Coast Plains and Hills",
+    "district": "Chennai",
+    "state": "Tamil Nadu",
+    "suitable_crops": ["Rice", "Groundnut", "Cotton", "Sugarcane", "Banana", "Chilli"],
+    "rainfall_mm": "1200-1400",
+    "soil_type": "Coastal Alluvial",
+    "lat": 13.0827,
+    "lng": 80.2707
+  },
+  "500001": {
+    "zone": "Deccan Plateau",
+    "district": "Hyderabad",
+    "state": "Telangana",
+    "suitable_crops": ["Cotton", "Maize", "Soybean", "Groundnut", "Sunflower", "Jowar"],
+    "rainfall_mm": "700-900",
+    "soil_type": "Black Cotton (Vertisol)",
+    "lat": 17.3850,
+    "lng": 78.4867
+  },
+  "302001": {
+    "zone": "Western Dry Region",
+    "district": "Jaipur",
+    "state": "Rajasthan",
+    "suitable_crops": ["Bajra", "Wheat", "Mustard", "Cluster Bean", "Cumin", "Cotton"],
+    "rainfall_mm": "300-500",
+    "soil_type": "Sandy Loam (Aridisol)",
+    "lat": 26.9124,
+    "lng": 75.7873
+  },
+  "208001": {
+    "zone": "Upper Gangetic Plain",
+    "district": "Kanpur",
+    "state": "Uttar Pradesh",
+    "suitable_crops": ["Wheat", "Rice", "Sugarcane", "Potato", "Mustard", "Pea"],
+    "rainfall_mm": "750-1000",
+    "soil_type": "Alluvial",
+    "lat": 26.4499,
+    "lng": 80.3319
+  },
+  "700001": {
+    "zone": "Lower Gangetic Plain",
+    "district": "Kolkata",
+    "state": "West Bengal",
+    "suitable_crops": ["Rice", "Jute", "Mustard", "Potato", "Vegetables", "Banana"],
+    "rainfall_mm": "1400-1800",
+    "soil_type": "Deltaic Alluvial",
+    "lat": 22.5726,
+    "lng": 88.3639
+  },
+  "411001": {
+    "zone": "Western Ghats and Konkan",
+    "district": "Pune",
+    "state": "Maharashtra",
+    "suitable_crops": ["Soybean", "Maize", "Groundnut", "Jowar", "Tomato", "Onion"],
+    "rainfall_mm": "600-800",
+    "soil_type": "Black Cotton (Vertisol)",
+    "lat": 18.5204,
+    "lng": 73.8567
+  },
+  "380001": {
+    "zone": "Gujarat Plains and Hills",
+    "district": "Ahmedabad",
+    "state": "Gujarat",
+    "suitable_crops": ["Cotton", "Groundnut", "Bajra", "Wheat", "Castor", "Cumin"],
+    "rainfall_mm": "500-700",
+    "soil_type": "Medium Black",
+    "lat": 23.0225,
+    "lng": 72.5714
+  }
+}

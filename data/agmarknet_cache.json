@@ -1,0 +1,50 @@
+{
+  "560001": {
+    "Tomato":     { "min": 1200, "max": 2800, "modal": 2000, "unit": "quintal", "date": "2026-07-01" },
+    "Potato":     { "min": 900,  "max": 1600, "modal": 1200, "unit": "quintal", "date": "2026-07-01" },
+    "Onion":      { "min": 800,  "max": 1500, "modal": 1100, "unit": "quintal", "date": "2026-07-01" },
+    "Wheat":      { "min": 2100, "max": 2300, "modal": 2200, "unit": "quintal", "date": "2026-07-01" },
+    "Rice":       { "min": 1800, "max": 2400, "modal": 2100, "unit": "quintal", "date": "2026-07-01" },
+    "Maize":      { "min": 1500, "max": 1900, "modal": 1700, "unit": "quintal", "date": "2026-07-01" },
+    "Cotton":     { "min": 5500, "max": 6500, "modal": 6000, "unit": "quintal", "date": "2026-07-01" },
+    "Soybean":    { "min": 3800, "max": 4500, "modal": 4200, "unit": "quintal", "date": "2026-07-01" },
+    "Chilli":     { "min": 6000, "max": 9000, "modal": 7500, "unit": "quintal", "date": "2026-07-01" },
+    "Groundnut":  { "min": 4800, "max": 5800, "modal": 5300, "unit": "quintal", "date": "2026-07-01" }
+  },
+  "400001": {
+    "Tomato":     { "min": 1400, "max": 3000, "modal": 2200, "unit": "quintal", "date": "2026-07-01" },
+    "Potato":     { "min": 1000, "max": 1800, "modal": 1400, "unit": "quintal", "date": "2026-07-01" },
+    "Onion":      { "min": 900,  "max": 1700, "modal": 1300, "unit": "quintal", "date": "2026-07-01" },
+    "Wheat":      { "min": 2150, "max": 2350, "modal": 2250, "unit": "quintal", "date": "2026-07-01" },
+    "Rice":       { "min": 1850, "max": 2500, "modal": 2150, "unit": "quintal", "date": "2026-07-01" },
+    "Maize":      { "min": 1600, "max": 2000, "modal": 1800, "unit": "quintal", "date": "2026-07-01" },
+    "Cotton":     { "min": 5600, "max": 6600, "modal": 6100, "unit": "quintal", "date": "2026-07-01" },
+    "Soybean":    { "min": 3900, "max": 4600, "modal": 4300, "unit": "quintal", "date": "2026-07-01" },
+    "Chilli":     { "min": 6200, "max": 9200, "modal": 7700, "unit": "quintal", "date": "2026-07-01" },
+    "Groundnut":  { "min": 4900, "max": 5900, "modal": 5400, "unit": "quintal", "date": "2026-07-01" }
+  },
+  "110001": {
+    "Tomato":     { "min": 1300, "max": 2900, "modal": 2100, "unit": "quintal", "date": "2026-07-01" },
+    "Potato":     { "min": 850,  "max": 1550, "modal": 1150, "unit": "quintal", "date": "2026-07-01" },
+    "Onion":      { "min": 850,  "max": 1600, "modal": 1200, "unit": "quintal", "date": "2026-07-01" },
+    "Wheat":      { "min": 2100, "max": 2280, "modal": 2180, "unit": "quintal", "date": "2026-07-01" },
+    "Rice":       { "min": 1780, "max": 2380, "modal": 2080, "unit": "quintal", "date": "2026-07-01" },
+    "Maize":      { "min": 1480, "max": 1880, "modal": 1680, "unit": "quintal", "date": "2026-07-01" },
+    "Cotton":     { "min": 5400, "max": 6400, "modal": 5900, "unit": "quintal", "date": "2026-07-01" },
+    "Soybean":    { "min": 3750, "max": 4450, "modal": 4100, "unit": "quintal", "date": "2026-07-01" },
+    "Chilli":     { "min": 5900, "max": 8900, "modal": 7400, "unit": "quintal", "date": "2026-07-01" },
+    "Groundnut":  { "min": 4700, "max": 5700, "modal": 5200, "unit": "quintal", "date": "2026-07-01" }
+  },
+  "500001": {
+    "Tomato":     { "min": 1100, "max": 2600, "modal": 1900, "unit": "quintal", "date": "2026-07-01" },
+    "Potato":     { "min": 880,  "max": 1580, "modal": 1180, "unit": "quintal", "date": "2026-07-01" },
+    "Onion":      { "min": 780,  "max": 1480, "modal": 1080, "unit": "quintal", "date": "2026-07-01" },
+    "Wheat":      { "min": 2080, "max": 2280, "modal": 2180, "unit": "quintal", "date": "2026-07-01" },
+    "Rice":       { "min": 1780, "max": 2380, "modal": 2080, "unit": "quintal", "date": "2026-07-01" },
+    "Maize":      { "min": 1480, "max": 1880, "modal": 1680, "unit": "quintal", "date": "2026-07-01" },
+    "Cotton":     { "min": 5450, "max": 6450, "modal": 5950, "unit": "quintal", "date": "2026-07-01" },
+    "Soybean":    { "min": 3850, "max": 4550, "modal": 4200, "unit": "quintal", "date": "2026-07-01" },
+    "Chilli":     { "min": 6100, "max": 9100, "modal": 7600, "unit": "quintal", "date": "2026-07-01" },
+    "Groundnut":  { "min": 4750, "max": 5750, "modal": 5250, "unit": "quintal", "date": "2026-07-01" }
+  }
+}
