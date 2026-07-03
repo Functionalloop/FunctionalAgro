@@ -7,10 +7,14 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 security = HTTPBearer()
 
 # Initialize Firebase Admin SDK
-cred_path = os.path.join(os.path.dirname(__file__), "serviceAccountKey.json")
-if os.path.exists(cred_path) and not firebase_admin._apps:
+cred_path_backend = os.path.join(os.path.dirname(__file__), "serviceAccountKey.json")
+cred_path_root = os.path.join(os.path.dirname(os.path.dirname(__file__)), "serviceAccountKey.json")
+
+valid_cred_path = cred_path_backend if os.path.exists(cred_path_backend) else (cred_path_root if os.path.exists(cred_path_root) else None)
+
+if valid_cred_path and not firebase_admin._apps:
     try:
-        cred = credentials.Certificate(cred_path)
+        cred = credentials.Certificate(valid_cred_path)
         firebase_admin.initialize_app(cred)
         print("✅ Firebase Admin SDK initialized.")
     except Exception as e:
