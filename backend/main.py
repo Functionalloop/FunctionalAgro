@@ -22,7 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.database import init_db
-from backend.routes import diagnose, recommend, advise, outbreak, dalal
+from backend.routes import diagnose, recommend, advise, outbreak, dalal, farmer_input, live_prices
 
 app = FastAPI(
     title="Kisan Alert API",
@@ -49,7 +49,9 @@ app.include_router(diagnose.router, prefix="/api", tags=["Diagnosis"])
 app.include_router(recommend.router, prefix="/api", tags=["Crop Recommendation"])
 app.include_router(advise.router,    prefix="/api", tags=["Advisory"])
 app.include_router(outbreak.router,  prefix="/api", tags=["Outbreak Radar"])
-app.include_router(dalal.router,     prefix="/api", tags=["AI Dalal"])
+app.include_router(dalal.router,         prefix="/api", tags=["AI Dalal"])
+app.include_router(farmer_input.router,  prefix="/api", tags=["Farmer Input"])
+app.include_router(live_prices.router,   prefix="/api", tags=["Live Prices"])
 
 
 def _configure_gemini():
@@ -97,5 +99,9 @@ def root():
             "GET  /api/outbreak-check",
             "GET  /api/outbreak-map",
             "POST /api/dalal-negotiate",
+            "POST /api/farmer-input",
+            "GET  /api/live-prices",
+            "GET  /api/live-prices/refresh",
+            "GET  /api/live-prices/summary",
         ],
     }

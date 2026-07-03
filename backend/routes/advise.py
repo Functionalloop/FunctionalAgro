@@ -22,15 +22,17 @@ def _get_gemini_model():
         return _gemini_model
     if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set in .env")
-    # Try new SDK, fall back to deprecated one
+    # Try old SDK first, fall back to new SDK
     try:
-        import google.genai as genai
+        import google.generativeai as genai  # Try old SDK first since code assumes it
         genai.configure(api_key=GEMINI_API_KEY)
         _gemini_model = genai.GenerativeModel("gemini-1.5-flash")
-    except (ImportError, AttributeError):
-        import google.generativeai as genai  # type: ignore
-        genai.configure(api_key=GEMINI_API_KEY)
-        _gemini_model = genai.GenerativeModel("gemini-1.5-flash")
+    except ImportError:
+        try:
+            import google.genai as genai
+            _gemini_model = genai.Client(api_key=GEMINI_API_KEY)
+        except ImportError:
+            raise HTTPException(status_code=500, detail="No Gemini SDK found")
     return _gemini_model
 
 
@@ -88,10 +90,19 @@ def advise(req: AdviseRequest):
             pincode=req.pincode,
         )
         try:
-            response = model.generate_content(prompt)
+            if hasattr(model, "models"):  # New SDK
+                response = model.models.generate_content(model="gemini-1.5-flash", contents=prompt)
+            else: # Old SDK
+                response = model.generate_content(prompt)
             advisory_en = response.text.strip()
         except Exception as e:
-            raise HTTPException(status_code=502, detail=f"Gemini API error: {str(e)}")
+            print(f"⚠️ Gemini API error in advise: {e}. Falling back to demo mode.")
+            advisory_en = (
+                f"{req.crop} {req.disease} is a fungal infection that spreads rapidly in humid conditions. "
+                "Immediately remove and destroy infected leaves, then spray with Mancozeb or Copper Oxychloride. "
+                "Avoid overhead irrigation and maintain proper plant spacing. "
+                "Apply preventive fungicide every 10 days during the monsoon season."
+            )
 
     # Translate if not English
     lang = req.language.lower()

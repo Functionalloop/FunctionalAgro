@@ -1173,7 +1173,319 @@ body::before {
   padding: 60px 20px;
 }
 
-/* Responsive */
+/* ── Input mode selector bar ─────────────────────────────────────────────── */
+.wa-input-mode-bar {
+  display: flex;
+  background: #F0F0F0;
+  border-top: 1px solid #DDD;
+  flex-shrink: 0;
+}
+
+.wa-input-mode-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 8px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #667781;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  letter-spacing: 0.3px;
+}
+
+.wa-input-mode-btn.active {
+  color: #128C7E;
+  border-bottom-color: #25D366;
+  background: rgba(37, 211, 102, 0.06);
+}
+
+.wa-input-mode-btn:hover:not(.active) {
+  background: rgba(0,0,0,0.04);
+  color: #333;
+}
+
+/* ── Input bar wrapper ───────────────────────────────────────────────────── */
+.wa-input-bar-wrapper {
+  flex-shrink: 0;
+}
+
+/* ── Textarea input ──────────────────────────────────────────────────────── */
+.wa-text-area {
+  resize: none;
+  height: auto;
+  font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+  line-height: 1.4;
+  white-space: normal;
+  overflow: auto;
+  text-overflow: initial;
+  min-height: 44px;
+  max-height: 100px;
+  outline: none;
+  border: 1px solid rgba(18,140,126,0.3) !important;
+  box-shadow: 0 0 0 2px rgba(37,211,102,0.1);
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.wa-text-area:focus {
+  border-color: #25D366 !important;
+  box-shadow: 0 0 0 3px rgba(37,211,102,0.18);
+}
+
+/* ── Voice recorder ──────────────────────────────────────────────────────── */
+.wa-voice-recorder {
+  background: #F0F0F0;
+  border-top: 1px solid #DDD;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 90px;
+  justify-content: center;
+}
+
+.wa-record-btn {
+  background: linear-gradient(135deg, #128C7E, #25D366);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.wa-record-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 24px rgba(37,211,102,0.45);
+}
+
+.wa-record-btn.stop {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  box-shadow: 0 4px 16px rgba(192,57,43,0.3);
+}
+
+.wa-record-btn.stop:hover {
+  box-shadow: 0 6px 24px rgba(192,57,43,0.45);
+}
+
+/* ── Recording pulse animation ───────────────────────────────────────────── */
+@keyframes recordPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+.wa-recording-pulse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.wa-recording-pulse span:first-child {
+  animation: recordPulse 1s ease-in-out infinite;
+}
+
+/* ── Demo PoC play button ────────────────────────────────────────────────── */
+.demo-start-state {
+  padding: 50px 20px;
+  color: #555;
+}
+
+.demo-play-btn {
+  background: linear-gradient(135deg, #075E54, #128C7E);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(7, 94, 84, 0.35);
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.demo-play-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 28px rgba(7, 94, 84, 0.5);
+  background: linear-gradient(135deg, #128C7E, #25D366);
+}
+
+.demo-play-btn:active {
+  transform: scale(0.98);
+}
+
+/* Smooth bubble entry animation */
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.wa-bubble {
+  animation: bubbleIn 0.22s ease forwards;
+}
+
+/* ── Dalal Chat ──────────────────────────────────────────────────────────── */
+.dalal-panel {
+  margin-top: 24px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.market-price-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  margin-top: 16px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.market-price-card.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+  background: rgba(0,0,0,0.02);
+}
+
+.market-price-card.error {
+  color: var(--red-500);
+  background: rgba(239,68,68,0.05);
+  border-color: rgba(239,68,68,0.2);
+}
+
+.bid-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.bid-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: slideUpFade 0.4s ease forwards;
+}
+
+.bid-card.best {
+  background: rgba(37,211,102,0.05);
+  border-color: rgba(37,211,102,0.3);
+}
+
+.bid-emoji {
+  font-size: 32px;
+}
+
+.bid-info {
+  flex: 1;
+}
+
+.bid-trader {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.bid-message {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.bid-amount {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.bid-amount span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.best-deal-card {
+  background: linear-gradient(135deg, rgba(37,211,102,0.1), rgba(37,211,102,0.02));
+  border: 1px solid rgba(37,211,102,0.3);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.8s forwards;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.best-deal-card h3 {
+  margin: 0 0 12px 0;
+  color: var(--text-primary);
+}
+
+.best-deal-price {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.best-deal-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.best-deal-recommendation {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(37, 211, 102, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+@keyframes slideUpFade {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .farmer-view { grid-template-columns: 1fr; }
   .wa-phone-frame { width: 100%; max-width: 400px; margin: 0 auto; }
