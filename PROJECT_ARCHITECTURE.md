@@ -1,11 +1,11 @@
-# Kisan Alert (FunctionalAgro) — Project Architecture & Overview
+# FunctionalAgro (FunctionalAgro) — Project Architecture & Overview
 
-This document provides a comprehensive technical overview of the **Kisan Alert** platform, detailing its features, system architecture, data flows, and technologies used. 
+This document provides a comprehensive technical overview of the **FunctionalAgro** platform, detailing its features, system architecture, data flows, and technologies used. 
 
 ---
 
 ## 1. Executive Summary
-Kisan Alert is an advanced, AI-driven agricultural advisory and market negotiation platform built to empower Indian farmers. Designed with edge-case resilience and rural connectivity in mind, the platform leverages state-of-the-art Generative AI, On-Device Machine Learning (Edge AI), and live government datasets to deliver multilingual, weather-aware, and highly localized insights directly to the farmer.
+FunctionalAgro is an advanced, AI-driven agricultural advisory and market negotiation platform built to empower Indian farmers. Designed with edge-case resilience and rural connectivity in mind, the platform leverages state-of-the-art Generative AI, On-Device Machine Learning (Edge AI), and live government datasets to deliver multilingual, weather-aware, and highly localized insights directly to the farmer.
 
 ---
 

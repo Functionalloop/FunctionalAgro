@@ -213,11 +213,11 @@ export default function DalalChat({ diagnosisResult }) {
   return (
     <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
       <div className="card-title" style={{ color: 'var(--green-500)' }}>
-        <span>🤝</span> AI Dalal — Price Negotiation
+        <span>🤝</span> Market Dalal — Price Negotiation
       </div>
 
       <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>
-        3 AI traders bid on your crop using <strong>live Agmarknet</strong> price data pulled directly from the Government of India market portal.
+        3 traders bid on your crop using <strong>live Agmarknet</strong> price data pulled directly from the Government of India market portal.
       </div>
 
       {/* Config row */}
@@ -280,7 +280,7 @@ export default function DalalChat({ diagnosisResult }) {
       {loading && (
         <div className="loader">
           <div className="spinner" />
-          Calling 3 AI traders… (~10 seconds)
+          Calling 3 traders… (~10 seconds)
         </div>
       )}
 

@@ -11,8 +11,8 @@ export default function BentoGrid({ onSelectTab }) {
     },
     {
       id: 'dalal',
-      title: 'AI Dalal',
-      desc: 'Negotiate the best price for your crops with 3 competitive AI traders anchored against real-time government Agmarknet prices.',
+      title: 'Market Dalal',
+      desc: 'Negotiate the best price for your crops with 3 competitive traders anchored against real-time government Agmarknet prices.',
       emoji: '📈',
       subEmoji: '💰',
       clayClass: 'clay-dalal',

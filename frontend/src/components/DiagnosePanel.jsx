@@ -46,7 +46,7 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
     setError(null)
 
     try {
-      // Step 1: Edge AI On-Device Diagnosis (TensorFlow.js)
+      // Step 1: Edge On-Device Diagnosis (TensorFlow.js)
       let diagnosis = { crop: "Unknown", disease: "Unknown", is_healthy: false }
       try {
         const model = await mobilenet.load()
@@ -69,7 +69,7 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
         await axios.post(`${API}/diagnose-log`, { pincode, ...diagnosis })
       } catch (e) {
         console.error("TFJS Error:", e)
-        throw new Error("Failed to run local AI inference. Please try again.")
+        throw new Error("Failed to run local inference. Please try again.")
       }
 
       // Step 2: Zone recommendation (parallel)

@@ -53,7 +53,7 @@ const DEMO_SCENARIOS = [
       {
         step: 'bot-msg',
         id: 'diagnosis',
-        header: '🌾 Kisan Alert',
+        header: '🌾 FunctionalAgro',
         content: {
           type: 'diagnosis',
           crop: 'Tomato',
@@ -146,7 +146,7 @@ const DEMO_SCENARIOS = [
       {
         step: 'bot-msg',
         id: 'diagnosis',
-        header: '🌾 Kisan Alert',
+        header: '🌾 FunctionalAgro',
         content: {
           type: 'diagnosis',
           crop: 'Potato',
@@ -232,7 +232,7 @@ const DEMO_SCENARIOS = [
       {
         step: 'bot-msg',
         id: 'diagnosis',
-        header: '🌾 Kisan Alert',
+        header: '🌾 FunctionalAgro',
         content: {
           type: 'diagnosis',
           crop: 'Tomato',
@@ -472,7 +472,7 @@ function BotContent({ content }) {
           <div>
             <div style={{ fontWeight: 700 }}>Want the best price before disease spreads?</div>
             <div style={{ fontSize: 11, marginTop: 4, opacity: 0.8 }}>
-              Reply <strong>SELL</strong> to get AI Dalal price negotiation now.
+              Reply <strong>SELL</strong> to get Dalal price negotiation now.
             </div>
           </div>
         </div>
@@ -577,7 +577,7 @@ function DemoPlayer({ scenario }) {
             ▶ Play Conversation
           </button>
           <div style={{ fontSize: 11, color: '#aaa', marginTop: 10 }}>
-            Watch a farmer interact with Kisan Alert
+            Watch a farmer interact with FunctionalAgro
           </div>
         </div>
       )}
@@ -812,9 +812,9 @@ export default function FarmerView({ diagnosisResult }) {
         <div className="wa-header">
           <div className="wa-avatar">🌾</div>
           <div className="wa-contact">
-            <div className="wa-contact-name">Kisan Alert</div>
+            <div className="wa-contact-name">FunctionalAgro</div>
             <div className="wa-contact-status">
-              {loading ? '⏳ Processing...' : mode === 'demo' ? '✓ PoC Demo — Scripted Walkthrough' : '✓ AI Agricultural Advisor · Live'}
+              {loading ? '⏳ Processing...' : mode === 'demo' ? '✓ PoC Demo — Scripted Walkthrough' : '✓ Agricultural Advisor · Live'}
             </div>
           </div>
           <div className="wa-header-icons">📞 ⋮</div>
@@ -888,7 +888,7 @@ export default function FarmerView({ diagnosisResult }) {
                   <div className="wa-meta">📍 {pincode} · {language}</div>
                 </WaBubble>
                 <WaBubble from="bot" delay={400}>
-                  <div className="wa-bot-header">🌾 Kisan Alert</div>
+                  <div className="wa-bot-header">🌾 FunctionalAgro</div>
                   <BotContent content={{ type: 'diagnosis', ...diagnosis }} />
                 </WaBubble>
                 <WaBubble from="bot" delay={800}>
@@ -993,7 +993,7 @@ export default function FarmerView({ diagnosisResult }) {
                 <input id="wa-file-input" type="file" accept="image/*" style={{ display: 'none' }}
                   onChange={e => { setLiveImage(e.target.files[0]); setLiveResult(null) }} />
                 <div className="wa-text-input">
-                  {liveImage ? `📸 ${liveImage.name} · PIN ${pincode}` : 'Upload crop photo for AI diagnosis...'}
+                  {liveImage ? `📸 ${liveImage.name} · PIN ${pincode}` : 'Upload crop photo for diagnosis...'}
                 </div>
                 <button className="wa-send-btn" onClick={handlePhotoSend} disabled={!liveImage || loading} id="wa-send-btn">
                   {loading ? '⏳' : '➤'}
@@ -1010,7 +1010,7 @@ export default function FarmerView({ diagnosisResult }) {
           <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
             <div className="card-title" style={{ fontSize: 15, color: 'var(--green-500)' }}>🎬 Demo PoC Scenarios</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.8, marginTop: 8 }}>
-              <div>🍅 <strong>Tomato Blight</strong> — farmer types in Hindi about black spots → AI diagnoses Late Blight → advisory + outbreak alert</div>
+              <div>🍅 <strong>Tomato Blight</strong> — farmer types in Hindi about black spots → diagnoses Late Blight → advisory + outbreak alert</div>
               <div style={{ marginTop: 8 }}>🎤 <strong>Voice Marathi</strong> — farmer sends voice note in Marathi → Gemini transcribes → Early Blight advisory</div>
               <div style={{ marginTop: 8 }}>🌱 <strong>Healthy Tamil</strong> — farmer asks in Tamil → crop confirmed healthy → Tamil advisory</div>
             </div>
@@ -1022,7 +1022,7 @@ export default function FarmerView({ diagnosisResult }) {
                 ✓ Gemini-powered disease advisory<br />
                 ✓ Audio response in farmer's language<br />
                 ✓ Crowd-sourced outbreak detection<br />
-                ✓ AI Dalal price negotiation CTA
+                ✓ Dalal price negotiation CTA
               </div>
             </div>
           </div>

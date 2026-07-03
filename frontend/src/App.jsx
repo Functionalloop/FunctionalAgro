@@ -140,7 +140,7 @@ export default function App() {
           onClick={() => document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' })}
           style={{ cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}
         >
-          <span>🌾</span> KISAN ALERT
+          <span>🌾</span> FUNCTIONALAGRO
         </button>
         <div className="nav-links-minimal">
           <button 

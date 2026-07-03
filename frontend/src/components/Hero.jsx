@@ -13,7 +13,7 @@ export default function Hero({ onStartDiagnose, onStartDalal }) {
         <p className="hero-subtitle">
           FunctionalAgro uses real government infrastructure (AIKosh, Bhashini, and Agmarknet) 
           backed by Google Gemini to help you diagnose plant diseases instantly, track local 
-          outbreaks in real time, and negotiate crop prices with AI buyers.
+          outbreaks in real time, and negotiate crop prices with buyers.
         </p>
 
         <div className="hero-ctas">

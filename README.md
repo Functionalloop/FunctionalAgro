@@ -1,8 +1,8 @@
-# 🌾 Kisan Alert (FunctionalAgro)
+# 🌾 FunctionalAgro (FunctionalAgro)
 
 **AI Advisory & Market Negotiation for Every Indian Farmer**
 
-Kisan Alert is a comprehensive, AI-powered agricultural assistant designed to empower farmers with real-time disease diagnosis, multilingual advisory, and live market price negotiations.
+FunctionalAgro is a comprehensive, AI-powered agricultural assistant designed to empower farmers with real-time disease diagnosis, multilingual advisory, and live market price negotiations.
 
 ---
 
