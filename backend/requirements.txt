@@ -12,3 +12,5 @@ deep-translator
 gTTS
 python-dotenv
 openpyxl
+firebase-admin
+google-genai
