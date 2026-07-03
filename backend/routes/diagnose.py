@@ -17,64 +17,37 @@ from backend.database import get_db, Diagnosis
 
 router = APIRouter()
 
-# ── Model loading (lazy, cached after first call) ─────────────────────────────
-_classifier = None
-_class_map: dict[str, dict] = {}
-
-CLASSES_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "models", "disease_classes.json")
-
-def _load_classes() -> dict[str, dict]:
-    global _class_map
-    if _class_map:
-        return _class_map
-    with open(CLASSES_PATH) as f:
-        data = json.load(f)
-    _class_map = {item["raw"]: item for item in data["classes"]}
-    return _class_map
-
-
-def _get_classifier():
-    global _classifier
-    if _classifier is None:
-        try:
-            from transformers import pipeline
-            import torch
-            device = 0 if torch.cuda.is_available() else -1
-            _classifier = pipeline(
-                "image-classification",
-                model="linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification",
-                device=device,
-            )
-            print("✅ Plant disease classifier loaded.")
-        except Exception as e:
-            print(f"⚠️  Classifier not loaded ({e}). Using mock mode for demo.")
-            _classifier = "mock"
-    return _classifier
-
+# ── Gemini Vision Model ───────────────────────────────────────────────────────
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 def _classify(image: Image.Image) -> tuple[str, str, float]:
-    """Returns (crop, disease, confidence). Falls back to mock in demo mode."""
-    clf = _get_classifier()
-    classes = _load_classes()
-
-    if clf == "mock":
-        # Demo mock: always returns Tomato Late Blight
+    """Returns (crop, disease, confidence) using Gemini Vision API."""
+    if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
+        print("⚠️ GEMINI_API_KEY missing, using mock diagnosis.")
         return "Tomato", "Late Blight", 0.924
 
-    results = clf(image, top_k=1)
-    top = results[0]
-    label = top["label"]
-    score = round(top["score"], 4)
+    prompt = (
+        "You are an expert crop pathologist. Analyze this plant leaf image. "
+        "Identify the crop and the disease. If it looks healthy, set disease to 'Healthy'. "
+        "Respond STRICTLY in this JSON format and nothing else: "
+        '{"crop": "CropName", "disease": "DiseaseName", "confidence": 0.95}'
+    )
 
-    info = classes.get(label)
-    if info:
-        return info["crop"], info["disease"], score
-
-    # Fallback label parse: "Tomato___Late_blight" → ("Tomato", "Late Blight")
-    parts = label.split("___")
-    crop = parts[0].replace("_", " ")
-    disease = parts[1].replace("_", " ").title() if len(parts) > 1 else "Unknown"
-    return crop, disease, score
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content([image, prompt])
+        
+        text = response.text.strip()
+        if text.startswith("```json"): text = text[7:]
+        if text.endswith("```"): text = text[:-3]
+        
+        data = json.loads(text.strip())
+        return data.get("crop", "Unknown"), data.get("disease", "Unknown"), float(data.get("confidence", 0.9))
+    except Exception as e:
+        print(f"⚠️ Gemini Vision failed ({e}). Falling back to mock.")
+        return "Tomato", "Late Blight", 0.924
 
 
 # ── Endpoint ──────────────────────────────────────────────────────────────────

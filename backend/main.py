@@ -83,18 +83,6 @@ def _configure_gemini():
 async def startup_event():
     init_db()
     
-    # Auto-seed the database for the live demo if empty
-    try:
-        from backend.database import SessionLocal, Diagnosis
-        from data.seed_diagnoses import seed
-        db = SessionLocal()
-        if db.query(Diagnosis).count() == 0:
-            print("[INFO] Database is empty. Seeding Outbreak Radar for demo...")
-            seed()
-        db.close()
-    except Exception as e:
-        print(f"[WARN] Could not seed database: {e}")
-
     _configure_gemini()
     demo_mode = os.getenv("DEMO_MODE", "false").lower() == "true"
     print(f"[OK] FunctionalAgro backend started. Demo mode: {demo_mode}")
