@@ -107,10 +107,9 @@ function BidCard({ bid, index, isBest }) {
       className={`bid-card ${isBest ? 'best' : ''}`}
       style={{ animationDelay: `${index * 0.18}s` }}
     >
-      <div className="bid-emoji">{bid.emoji}</div>
-      <div className="bid-info">
+      <div className="bid-info" style={{ marginLeft: 0 }}>
         <div className="bid-trader">
-          {bid.trader} {isBest && '🏆'}
+          {bid.trader}
         </div>
         <div className="bid-message">{bid.message}</div>
         <div className="bid-amount">
@@ -213,7 +212,7 @@ export default function DalalChat({ diagnosisResult }) {
   return (
     <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
       <div className="card-title" style={{ color: 'var(--green-500)' }}>
-        <span>🤝</span> Market Dalal — Price Negotiation
+        Market Dalal — Price Negotiation
       </div>
 
       <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>
@@ -259,7 +258,7 @@ export default function DalalChat({ diagnosisResult }) {
           >
             {loading
               ? <><div className="spinner" style={{ width: 18, height: 18 }} /> Getting bids…</>
-              : <><span>🏷️</span> Get Best Price</>
+              : <>Get Best Price</>
             }
           </button>
         </div>
@@ -309,7 +308,7 @@ export default function DalalChat({ diagnosisResult }) {
               background: 'rgba(37,211,102,0.12)', border: '1px solid rgba(37,211,102,0.3)',
               color: '#16a34a', fontWeight: 600,
             }}>
-              🟢 Agmarknet Live
+              Agmarknet Live
             </span>
           </div>
 
@@ -338,7 +337,7 @@ export default function DalalChat({ diagnosisResult }) {
 
           {/* Best deal */}
           <div className="best-deal-card" id="best-deal-card">
-            <h3>🏆 Best Deal</h3>
+            <h3>Best Deal</h3>
             <div className="best-deal-price">
               ₹{result.best_bid?.toLocaleString('en-IN')}
               <span style={{ fontSize: 20, color: 'var(--green-300)' }}>/quintal</span>
@@ -350,12 +349,12 @@ export default function DalalChat({ diagnosisResult }) {
             {modalPrice && (
               <div style={{ marginTop: 8, fontSize: 12, color: 'var(--text-muted)' }}>
                 {result.best_bid > modalPrice
-                  ? `✅ ${Math.round((result.best_bid / modalPrice - 1) * 100)}% above today's market price`
-                  : `⚠️ ${Math.round((1 - result.best_bid / modalPrice) * 100)}% below today's market price`}
+                  ? `${Math.round((result.best_bid / modalPrice - 1) * 100)}% above today's market price`
+                  : `${Math.round((1 - result.best_bid / modalPrice) * 100)}% below today's market price`}
               </div>
             )}
             <div className="best-deal-recommendation">
-              💡 {result.recommendation}
+              {result.recommendation}
             </div>
           </div>
         </div>
