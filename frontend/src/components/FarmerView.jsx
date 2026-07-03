@@ -1007,8 +1007,8 @@ export default function FarmerView({ diagnosisResult }) {
       {/* Side panel */}
       <div className="wa-live-settings">
         {mode === 'demo' && (
-          <div className="card">
-            <div className="card-title" style={{ fontSize: 15 }}>🎬 Demo PoC Scenarios</div>
+          <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
+            <div className="card-title" style={{ fontSize: 15, color: 'var(--green-500)' }}>🎬 Demo PoC Scenarios</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.8, marginTop: 8 }}>
               <div>🍅 <strong>Tomato Blight</strong> — farmer types in Hindi about black spots → AI diagnoses Late Blight → advisory + outbreak alert</div>
               <div style={{ marginTop: 8 }}>🎤 <strong>Voice Marathi</strong> — farmer sends voice note in Marathi → Gemini transcribes → Early Blight advisory</div>
@@ -1029,8 +1029,8 @@ export default function FarmerView({ diagnosisResult }) {
         )}
 
         {mode === 'live' && (
-          <div className="card">
-            <div className="card-title" style={{ fontSize: 15 }}>📡 Live Settings</div>
+          <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
+            <div className="card-title" style={{ fontSize: 15, color: 'var(--green-500)' }}>📡 Live Settings</div>
             <div className="form-group">
               <label>📍 Pincode</label>
               <input className="form-input" value={pincode} onChange={e => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))} />

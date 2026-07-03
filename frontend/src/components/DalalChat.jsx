@@ -211,8 +211,8 @@ export default function DalalChat({ diagnosisResult }) {
   }
 
   return (
-    <div className="card">
-      <div className="card-title">
+    <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
+      <div className="card-title" style={{ color: 'var(--green-500)' }}>
         <span>🤝</span> AI Dalal — Price Negotiation
       </div>
 
