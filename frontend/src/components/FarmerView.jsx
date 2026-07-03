@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
 
 // ── Time helper ────────────────────────────────────────────────────────────────
 function nowTime() {
@@ -336,7 +337,7 @@ function VoiceNote({ audioUrl, duration = 35, simulating = false }) {
   return (
     <div className="wa-voice-note" onClick={toggle}>
       {audioUrl && (
-        <audio ref={audioRef} src={`http://localhost:8000${audioUrl}`}
+        <audio ref={audioRef} src={`${apiBase}${audioUrl}`}
           onEnded={() => setPlaying(false)}
           onTimeUpdate={e => {
             const dur = e.target.duration || 1
