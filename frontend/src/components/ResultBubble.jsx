@@ -11,7 +11,7 @@ const SEVERITY_LABEL = {
   high:     '🔴 High Risk',
   moderate: '🟡 Moderate Risk',
   none:     '🟢 Healthy',
-  critical: '🚨 Critical',
+  critical: '🚨 Critical Outbreak',
 }
 
 export default function ResultBubble({ result }) {
@@ -39,30 +39,32 @@ export default function ResultBubble({ result }) {
 
   return (
     <div className="sms-panel">
-
       {/* Bubble 1: Diagnosis */}
       <div className={`sms-bubble ${bubbleClass}`}>
         <div className="sms-header">
-          <span className="sms-tag">🌿 Diagnosis Result</span>
-          <span className="confidence-pill">{Math.round(diagnosis.confidence * 100)}% confidence</span>
-        </div>
-
-        <div className="diagnosis-line">
-          {diagnosis.crop} —{' '}
-          <span className={isHealthy ? 'healthy-name' : 'disease-name'}>
-            {diagnosis.disease}
+          <span className="sms-tag">🌿 Diagnostic Results</span>
+          <span className="confidence-pill" style={{ textShadow: 'none' }}>
+            {Math.round(diagnosis.confidence * 100)}% Confidence
           </span>
         </div>
 
-        <div>
-          <span className={`severity-badge ${SEVERITY_CLASS[severity]}`}>
-            {SEVERITY_LABEL[severity]}
-          </span>
+        <div className="diagnosis-line" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            {diagnosis.crop} —{' '}
+            <span className={isHealthy ? 'healthy-name' : 'disease-name'}>
+              {diagnosis.disease}
+            </span>
+          </div>
+          <div>
+            <span className={`severity-badge ${SEVERITY_CLASS[severity]}`}>
+              {SEVERITY_LABEL[severity]}
+            </span>
+          </div>
         </div>
 
-        <div className="divider" />
-        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-          📍 Pincode {diagnosis.pincode} · ID #{diagnosis.id}
+        <div className="divider" style={{ margin: '16px 0' }} />
+        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+          📍 Pincode {diagnosis.pincode} · Diagnostic ID #{diagnosis.id}
         </div>
       </div>
 
@@ -70,20 +72,22 @@ export default function ResultBubble({ result }) {
       {zone && (
         <div className="sms-bubble" style={{ animationDelay: '0.1s' }}>
           <div className="sms-header">
-            <span className="sms-tag">🗺️ Zone &amp; Crop Recommendation</span>
+            <span className="sms-tag">🗺️ Zone Agro-Climatic Intelligence</span>
           </div>
-          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>
+          <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 6, color: 'var(--text-primary)' }}>
             {zone.zone}
           </div>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>
-            {zone.district}, {zone.state} · {zone.soil_type} · {zone.rainfall_mm} mm rainfall
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>
+            📍 {zone.district}, {zone.state} · 🪵 {zone.soil_type} · 🌧️ {zone.rainfall_mm}mm rainfall
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
-            Suitable crops for your region (AIKosh data):
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Recommended Resilient Crops (AIKosh data):
           </div>
           <div className="zone-chips">
-            {zone.suitable_crops?.map((crop, i) => (
-              <span key={i} className={`zone-chip ${i < 2 ? 'highlight' : ''}`}>{crop}</span>
+            {zone.suitable_crops?.map((cropName, i) => (
+              <span key={i} className={`zone-chip ${i < 2 ? 'highlight' : ''}`}>
+                {cropName}
+              </span>
             ))}
           </div>
         </div>
@@ -92,24 +96,31 @@ export default function ResultBubble({ result }) {
       {/* Bubble 3: Advisory */}
       {advisory && (
         <div className="sms-bubble" style={{ animationDelay: '0.2s' }}>
-          <div className="sms-header">
+          <div className="sms-header" style={{ alignItems: 'center' }}>
             <span className="sms-tag">
-              💬 Advisory{advisory.translated ? ` · ${result.language}` : ''}
+              💬 Expert Advisory{advisory.translated ? ` · ${result.language}` : ''}
             </span>
             {audioUrl && (
-              <button className="btn btn-audio" onClick={toggleAudio} id="play-audio-btn">
-                {playing ? '⏸️ Pause' : '🔊 Play Audio'}
+              <button 
+                className="btn btn-audio" 
+                onClick={toggleAudio} 
+                id="play-audio-btn"
+                style={{ fontSize: 11, fontWeight: 700 }}
+              >
+                {playing ? '⏸ Pause Advisory' : '🔊 Play Audio'}
               </button>
             )}
           </div>
 
-          <div className="advisory-text">{advisory.advisory_text}</div>
+          <div className="advisory-text" style={{ fontSize: 15, fontWeight: 500, lineHeight: 1.7, color: 'var(--text-primary)' }}>
+            {advisory.advisory_text}
+          </div>
 
           {advisory.translated && (
             <>
-              <div className="divider" />
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                📖 English: {advisory.advisory_english}
+              <div className="divider" style={{ margin: '16px 0' }} />
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                📖 <strong>English Reference:</strong> {advisory.advisory_english}
               </div>
             </>
           )}
@@ -123,8 +134,8 @@ export default function ResultBubble({ result }) {
             />
           )}
 
-          <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-muted)' }}>
-            Powered by Gemini 1.5 Flash · Translated via Bhashini
+          <div style={{ marginTop: 16, fontSize: 11, color: 'var(--text-muted)' }}>
+            Generated via Gemini 1.5 Flash · Speech translation via Bhashini voice synthesis
           </div>
         </div>
       )}

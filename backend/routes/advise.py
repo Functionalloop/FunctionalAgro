@@ -1,11 +1,10 @@
 """
 POST /api/advise
-Accepts crop + disease + language + pincode → Gemini advisory → Bhashini translation → gTTS audio.
+Accepts crop + disease + language + pincode -> Gemini advisory -> Bhashini translation -> gTTS audio.
 """
 import os
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import google.generativeai as genai
 
 from backend.language import translate, text_to_speech
 
@@ -14,14 +13,23 @@ router = APIRouter()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 DEMO_MODE      = os.getenv("DEMO_MODE", "false").lower() == "true"
 
-# Gemini model — configured once at startup by main.py via genai.configure()
+# Lazy-loaded Gemini model
 _gemini_model = None
 
 def _get_gemini_model():
     global _gemini_model
-    if _gemini_model is None:
-        if not GEMINI_API_KEY:
-            raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set in .env")
+    if _gemini_model is not None:
+        return _gemini_model
+    if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set in .env")
+    # Try new SDK, fall back to deprecated one
+    try:
+        import google.genai as genai
+        genai.configure(api_key=GEMINI_API_KEY)
+        _gemini_model = genai.GenerativeModel("gemini-1.5-flash")
+    except (ImportError, AttributeError):
+        import google.generativeai as genai  # type: ignore
+        genai.configure(api_key=GEMINI_API_KEY)
         _gemini_model = genai.GenerativeModel("gemini-1.5-flash")
     return _gemini_model
 

@@ -15,8 +15,8 @@ from backend.database import get_db, Diagnosis
 router = APIRouter()
 
 ZONE_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "pincode_zone_crops.json")
-OUTBREAK_THRESHOLD = 3
-WINDOW_DAYS = 7
+OUTBREAK_THRESHOLD = int(os.getenv("OUTBREAK_THRESHOLD", "3"))
+WINDOW_DAYS        = int(os.getenv("OUTBREAK_WINDOW_DAYS", "7"))
 
 _zone_data: dict = {}
 

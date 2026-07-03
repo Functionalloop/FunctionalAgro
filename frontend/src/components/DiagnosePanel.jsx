@@ -76,9 +76,9 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
   }
 
   return (
-    <div className="card">
-      <div className="card-title">
-        <span>🌿</span> Diagnose Your Crop
+    <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
+      <div className="card-title" style={{ color: 'var(--green-500)' }}>
+        <span>🌿</span> Diagnose Crop
       </div>
 
       {/* Upload Zone */}
@@ -89,6 +89,9 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
         onDrop={onDrop}
         onClick={() => !preview && document.getElementById('file-input').click()}
       >
+        {/* Futuristic scanning laser */}
+        {(preview || loading) && <div className="scanner-line" />}
+
         <input
           id="file-input"
           type="file"
@@ -99,19 +102,27 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
         {preview ? (
           <>
             <img src={preview} alt="Preview" className="upload-preview" />
-            <div className="upload-hint" style={{ marginTop: 10 }}>
-              ✅ {image.name} — <button
+            <div className="upload-hint" style={{ marginTop: 14 }}>
+              <span style={{ color: 'var(--green-400)', fontWeight: 600 }}>✓ {image.name}</span>
+              <br />
+              <button
                 className="btn btn-secondary"
-                style={{ padding: '4px 12px', fontSize: 12, display: 'inline-flex', marginTop: 8 }}
+                style={{ padding: '6px 14px', fontSize: 11, display: 'inline-flex', marginTop: 10, textTransform: 'none' }}
                 onClick={e => { e.stopPropagation(); setImage(null); setPreview(null) }}
-              >Change photo</button>
+              >
+                Change photo
+              </button>
             </div>
           </>
         ) : (
           <>
             <div className="upload-icon">📸</div>
-            <div className="upload-text">Drop your crop photo here or click to upload</div>
-            <div className="upload-hint">Supports JPG, PNG, WEBP — PlantVillage model (38 disease classes)</div>
+            <div className="upload-text" style={{ color: 'var(--text-primary)' }}>
+              Drag &amp; drop crop image here or click
+            </div>
+            <div className="upload-hint" style={{ marginTop: 8 }}>
+              Supports JPG, PNG, WEBP — PlantVillage scanner (38 classes)
+            </div>
           </>
         )}
       </div>
@@ -130,7 +141,7 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
           />
         </div>
         <div className="form-group">
-          <label>🌐 Language</label>
+          <label>🌐 Advisory Language</label>
           <select
             className="form-select"
             value={language}
@@ -145,9 +156,9 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
 
       {error && (
         <div style={{
-          marginTop: 16, padding: '12px 16px',
-          background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-          borderRadius: 'var(--radius-md)', color: 'var(--red-400)', fontSize: 13,
+          marginTop: 20, padding: '12px 16px',
+          background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)',
+          borderRadius: 'var(--radius-sm)', color: 'var(--red-400)', fontSize: 13,
         }}>
           ⚠️ {error}
         </div>
@@ -158,11 +169,12 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
         onClick={handleSubmit}
         disabled={loading || !image}
         id="diagnose-btn"
+        style={{ width: '100%', marginTop: 24 }}
       >
         {loading ? (
-          <><div className="spinner" style={{ width: 18, height: 18 }} /> Analysing your crop…</>
+          <><div className="spinner" style={{ width: 18, height: 18, marginRight: 8 }} /> Scanning Harvest…</>
         ) : (
-          <><span>🔍</span> Diagnose &amp; Get Advisory</>
+          <><span>🔍</span> Start Diagnostic Scan</>
         )}
       </button>
     </div>

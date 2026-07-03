@@ -1,0 +1,352 @@
+{
+  "_metadata": {
+    "source": "ICAR NARP 15 Agro-Climatic Zone Classification (Planning Commission of India)",
+    "authority": "Indian Council of Agricultural Research (ICAR) — National Agricultural Research Project",
+    "zones": 15,
+    "states_covered": 36,
+    "districts_covered": 120,
+    "reference": "Agro-Climatic Regional Planning, Planning Commission, Govt of India (1988), revalidated by ICAR-NBSS&LUP"
+  },
+
+  "Zone I": {
+    "name": "Western Himalayan Region",
+    "id": 1,
+    "states": ["Jammu & Kashmir", "Himachal Pradesh", "Uttarakhand"],
+    "suitable_crops": ["Apple", "Walnut", "Cherry", "Wheat", "Barley", "Pea", "Potato", "Saffron", "Maize"],
+    "rainfall_mm": "600-1200",
+    "soil_type": "Mountain Forest Soil / Brown Hill Soil",
+    "temperature_c": "5-20",
+    "kharif_crops": ["Maize", "Rice", "Potato", "Vegetables"],
+    "rabi_crops": ["Wheat", "Barley", "Pea", "Mustard"],
+    "districts": {
+      "Srinagar":    { "state": "Jammu & Kashmir",  "pincode": "190001", "lat": 34.0837, "lng": 74.7973 },
+      "Jammu":       { "state": "Jammu & Kashmir",  "pincode": "180001", "lat": 32.7357, "lng": 74.8691 },
+      "Shimla":      { "state": "Himachal Pradesh", "pincode": "171001", "lat": 31.1048, "lng": 77.1734 },
+      "Kangra":      { "state": "Himachal Pradesh", "pincode": "176215", "lat": 32.0998, "lng": 76.2691 },
+      "Kullu":       { "state": "Himachal Pradesh", "pincode": "175101", "lat": 31.9592, "lng": 77.1089 },
+      "Dehradun":    { "state": "Uttarakhand",      "pincode": "248001", "lat": 30.3165, "lng": 78.0322 },
+      "Nainital":    { "state": "Uttarakhand",      "pincode": "263001", "lat": 29.3919, "lng": 79.4542 },
+      "Mussoorie":   { "state": "Uttarakhand",      "pincode": "248179", "lat": 30.4598, "lng": 78.0664 }
+    }
+  },
+
+  "Zone II": {
+    "name": "Eastern Himalayan Region",
+    "id": 2,
+    "states": ["Assam", "Sikkim", "Arunachal Pradesh", "Meghalaya", "Manipur", "Nagaland", "Mizoram", "Tripura", "West Bengal (Hills)"],
+    "suitable_crops": ["Rice", "Maize", "Ginger", "Cardamom", "Tea", "Jute", "Potato", "Orange", "Banana", "Bamboo"],
+    "rainfall_mm": "2000-4000",
+    "soil_type": "Red Laterite / Alluvial Hill Soil",
+    "temperature_c": "10-30",
+    "kharif_crops": ["Rice", "Maize", "Jute", "Ginger", "Turmeric"],
+    "rabi_crops": ["Mustard", "Potato", "Vegetables", "Pea"],
+    "districts": {
+      "Guwahati":    { "state": "Assam",            "pincode": "781001", "lat": 26.1445, "lng": 91.7362 },
+      "Dibrugarh":   { "state": "Assam",            "pincode": "786001", "lat": 27.4728, "lng": 94.9120 },
+      "Jorhat":      { "state": "Assam",            "pincode": "785001", "lat": 26.7465, "lng": 94.2026 },
+      "Silchar":     { "state": "Assam",            "pincode": "788001", "lat": 24.8333, "lng": 92.7789 },
+      "Gangtok":     { "state": "Sikkim",           "pincode": "737101", "lat": 27.3389, "lng": 88.6065 },
+      "Shillong":    { "state": "Meghalaya",        "pincode": "793001", "lat": 25.5788, "lng": 91.8933 },
+      "Itanagar":    { "state": "Arunachal Pradesh","pincode": "791111", "lat": 27.1030, "lng": 93.6297 },
+      "Imphal":      { "state": "Manipur",          "pincode": "795001", "lat": 24.8170, "lng": 93.9368 },
+      "Kohima":      { "state": "Nagaland",         "pincode": "797001", "lat": 25.6701, "lng": 94.1077 },
+      "Aizawl":      { "state": "Mizoram",          "pincode": "796001", "lat": 23.7307, "lng": 92.7173 },
+      "Agartala":    { "state": "Tripura",          "pincode": "799001", "lat": 23.8315, "lng": 91.2868 },
+      "Darjeeling":  { "state": "West Bengal",      "pincode": "734101", "lat": 27.0410, "lng": 88.2663 }
+    }
+  },
+
+  "Zone III": {
+    "name": "Lower Gangetic Plains Region",
+    "id": 3,
+    "states": ["West Bengal (Plains)", "Bihar (Eastern)"],
+    "suitable_crops": ["Rice", "Jute", "Mustard", "Potato", "Banana", "Vegetables", "Sugarcane", "Wheat"],
+    "rainfall_mm": "1400-1800",
+    "soil_type": "Deltaic Alluvial",
+    "temperature_c": "15-35",
+    "kharif_crops": ["Rice", "Jute", "Maize", "Sesame"],
+    "rabi_crops": ["Wheat", "Mustard", "Potato", "Lentil", "Pea"],
+    "districts": {
+      "Kolkata":     { "state": "West Bengal", "pincode": "700001", "lat": 22.5726, "lng": 88.3639 },
+      "Howrah":      { "state": "West Bengal", "pincode": "711101", "lat": 22.5958, "lng": 88.2636 },
+      "Burdwan":     { "state": "West Bengal", "pincode": "713101", "lat": 23.2324, "lng": 87.8615 },
+      "Hooghly":     { "state": "West Bengal", "pincode": "712101", "lat": 22.9050, "lng": 88.3975 },
+      "Nadia":       { "state": "West Bengal", "pincode": "741101", "lat": 23.4679, "lng": 88.5569 },
+      "Murshidabad": { "state": "West Bengal", "pincode": "742101", "lat": 24.1826, "lng": 88.2714 },
+      "Malda":       { "state": "West Bengal", "pincode": "732101", "lat": 25.0108, "lng": 88.1417 }
+    }
+  },
+
+  "Zone IV": {
+    "name": "Middle Gangetic Plains Region",
+    "id": 4,
+    "states": ["Uttar Pradesh (Eastern)", "Bihar"],
+    "suitable_crops": ["Rice", "Wheat", "Sugarcane", "Maize", "Potato", "Lentil", "Chickpea", "Mustard"],
+    "rainfall_mm": "1000-1400",
+    "soil_type": "Alluvial",
+    "temperature_c": "10-40",
+    "kharif_crops": ["Rice", "Maize", "Arhar", "Sesame", "Sugarcane"],
+    "rabi_crops": ["Wheat", "Mustard", "Potato", "Lentil", "Chickpea"],
+    "districts": {
+      "Patna":       { "state": "Bihar",          "pincode": "800001", "lat": 25.5941, "lng": 85.1376 },
+      "Gaya":        { "state": "Bihar",          "pincode": "823001", "lat": 24.7955, "lng": 85.0002 },
+      "Muzaffarpur": { "state": "Bihar",          "pincode": "842001", "lat": 26.1197, "lng": 85.3910 },
+      "Bhagalpur":   { "state": "Bihar",          "pincode": "812001", "lat": 25.2425, "lng": 86.9842 },
+      "Darbhanga":   { "state": "Bihar",          "pincode": "846004", "lat": 26.1542, "lng": 85.9000 },
+      "Varanasi":    { "state": "Uttar Pradesh",  "pincode": "221001", "lat": 25.3176, "lng": 82.9739 },
+      "Allahabad":   { "state": "Uttar Pradesh",  "pincode": "211001", "lat": 25.4358, "lng": 81.8463 },
+      "Gorakhpur":   { "state": "Uttar Pradesh",  "pincode": "273001", "lat": 26.7606, "lng": 83.3732 },
+      "Azamgarh":    { "state": "Uttar Pradesh",  "pincode": "276001", "lat": 26.0670, "lng": 83.1855 }
+    }
+  },
+
+  "Zone V": {
+    "name": "Upper Gangetic Plains Region",
+    "id": 5,
+    "states": ["Uttar Pradesh (Western/Central)"],
+    "suitable_crops": ["Wheat", "Rice", "Sugarcane", "Potato", "Mustard", "Mentha", "Pea", "Maize"],
+    "rainfall_mm": "750-1000",
+    "soil_type": "Alluvial",
+    "temperature_c": "8-42",
+    "kharif_crops": ["Rice", "Sugarcane", "Maize", "Arhar", "Soybean"],
+    "rabi_crops": ["Wheat", "Mustard", "Potato", "Pea", "Chickpea"],
+    "districts": {
+      "Lucknow":     { "state": "Uttar Pradesh", "pincode": "226001", "lat": 26.8467, "lng": 80.9462 },
+      "Kanpur":      { "state": "Uttar Pradesh", "pincode": "208001", "lat": 26.4499, "lng": 80.3319 },
+      "Agra":        { "state": "Uttar Pradesh", "pincode": "282001", "lat": 27.1767, "lng": 78.0081 },
+      "Mathura":     { "state": "Uttar Pradesh", "pincode": "281001", "lat": 27.4924, "lng": 77.6737 },
+      "Bareilly":    { "state": "Uttar Pradesh", "pincode": "243001", "lat": 28.3670, "lng": 79.4304 },
+      "Meerut":      { "state": "Uttar Pradesh", "pincode": "250001", "lat": 28.9845, "lng": 77.7064 },
+      "Moradabad":   { "state": "Uttar Pradesh", "pincode": "244001", "lat": 28.8386, "lng": 78.7733 },
+      "Aligarh":     { "state": "Uttar Pradesh", "pincode": "202001", "lat": 27.8974, "lng": 78.0880 }
+    }
+  },
+
+  "Zone VI": {
+    "name": "Trans-Gangetic Plains Region",
+    "id": 6,
+    "states": ["Punjab", "Haryana", "Delhi", "Chandigarh"],
+    "suitable_crops": ["Wheat", "Rice", "Sugarcane", "Mustard", "Cotton", "Maize", "Barley", "Sunflower"],
+    "rainfall_mm": "600-800",
+    "soil_type": "Alluvial / Sandy Loam",
+    "temperature_c": "5-45",
+    "kharif_crops": ["Rice", "Cotton", "Maize", "Groundnut", "Sugarcane"],
+    "rabi_crops": ["Wheat", "Mustard", "Barley", "Chickpea", "Sunflower"],
+    "districts": {
+      "New Delhi":   { "state": "Delhi",     "pincode": "110001", "lat": 28.6139, "lng": 77.2090 },
+      "Chandigarh":  { "state": "Chandigarh","pincode": "160001", "lat": 30.7333, "lng": 76.7794 },
+      "Amritsar":    { "state": "Punjab",    "pincode": "143001", "lat": 31.6340, "lng": 74.8723 },
+      "Ludhiana":    { "state": "Punjab",    "pincode": "141001", "lat": 30.9010, "lng": 75.8573 },
+      "Jalandhar":   { "state": "Punjab",    "pincode": "144001", "lat": 31.3260, "lng": 75.5762 },
+      "Patiala":     { "state": "Punjab",    "pincode": "147001", "lat": 30.3398, "lng": 76.3869 },
+      "Bathinda":    { "state": "Punjab",    "pincode": "151001", "lat": 30.2110, "lng": 74.9455 },
+      "Gurugram":    { "state": "Haryana",   "pincode": "122001", "lat": 28.4595, "lng": 77.0266 },
+      "Faridabad":   { "state": "Haryana",   "pincode": "121001", "lat": 28.4089, "lng": 77.3178 },
+      "Rohtak":      { "state": "Haryana",   "pincode": "124001", "lat": 28.8955, "lng": 76.6066 },
+      "Hisar":       { "state": "Haryana",   "pincode": "125001", "lat": 29.1492, "lng": 75.7217 },
+      "Ambala":      { "state": "Haryana",   "pincode": "134001", "lat": 30.3782, "lng": 76.7767 }
+    }
+  },
+
+  "Zone VII": {
+    "name": "Eastern Plateau and Hills Region",
+    "id": 7,
+    "states": ["Jharkhand", "Odisha (Interior)", "Chhattisgarh", "Madhya Pradesh (Eastern)"],
+    "suitable_crops": ["Rice", "Maize", "Pulses", "Oilseeds", "Cotton", "Soybean", "Jowar", "Ragi"],
+    "rainfall_mm": "1000-1400",
+    "soil_type": "Red & Yellow / Laterite",
+    "temperature_c": "10-42",
+    "kharif_crops": ["Rice", "Maize", "Arhar", "Moong", "Cotton"],
+    "rabi_crops": ["Wheat", "Chickpea", "Lentil", "Mustard", "Safflower"],
+    "districts": {
+      "Ranchi":      { "state": "Jharkhand",      "pincode": "834001", "lat": 23.3441, "lng": 85.3096 },
+      "Jamshedpur":  { "state": "Jharkhand",      "pincode": "831001", "lat": 22.8046, "lng": 86.2029 },
+      "Dhanbad":     { "state": "Jharkhand",      "pincode": "826001", "lat": 23.7957, "lng": 86.4304 },
+      "Bhubaneswar": { "state": "Odisha",         "pincode": "751001", "lat": 20.2961, "lng": 85.8245 },
+      "Cuttack":     { "state": "Odisha",         "pincode": "753001", "lat": 20.4625, "lng": 85.8830 },
+      "Raipur":      { "state": "Chhattisgarh",   "pincode": "492001", "lat": 21.2514, "lng": 81.6296 },
+      "Bilaspur":    { "state": "Chhattisgarh",   "pincode": "495001", "lat": 22.0796, "lng": 82.1391 },
+      "Jabalpur":    { "state": "Madhya Pradesh", "pincode": "482001", "lat": 23.1815, "lng": 79.9864 },
+      "Rewa":        { "state": "Madhya Pradesh", "pincode": "486001", "lat": 24.5362, "lng": 81.2996 }
+    }
+  },
+
+  "Zone VIII": {
+    "name": "Central Plateau and Hills Region",
+    "id": 8,
+    "states": ["Madhya Pradesh (Central/Western)", "Rajasthan (Eastern)", "Uttar Pradesh (Bundelkhand)"],
+    "suitable_crops": ["Soybean", "Maize", "Cotton", "Wheat", "Groundnut", "Jowar", "Sesame", "Mustard"],
+    "rainfall_mm": "800-1200",
+    "soil_type": "Black Cotton (Vertisol) / Red Sandy",
+    "temperature_c": "10-45",
+    "kharif_crops": ["Soybean", "Maize", "Cotton", "Jowar", "Sesame"],
+    "rabi_crops": ["Wheat", "Chickpea", "Mustard", "Lentil", "Pea"],
+    "districts": {
+      "Bhopal":      { "state": "Madhya Pradesh", "pincode": "462001", "lat": 23.2599, "lng": 77.4126 },
+      "Indore":      { "state": "Madhya Pradesh", "pincode": "452001", "lat": 22.7196, "lng": 75.8577 },
+      "Gwalior":     { "state": "Madhya Pradesh", "pincode": "474001", "lat": 26.2183, "lng": 78.1828 },
+      "Ujjain":      { "state": "Madhya Pradesh", "pincode": "456001", "lat": 23.1765, "lng": 75.7885 },
+      "Sagar":       { "state": "Madhya Pradesh", "pincode": "470001", "lat": 23.8388, "lng": 78.7378 },
+      "Kota":        { "state": "Rajasthan",      "pincode": "324001", "lat": 25.2138, "lng": 75.8648 },
+      "Bundi":       { "state": "Rajasthan",      "pincode": "323001", "lat": 25.4401, "lng": 75.6480 },
+      "Jhansi":      { "state": "Uttar Pradesh",  "pincode": "284001", "lat": 25.4484, "lng": 78.5685 },
+      "Satna":       { "state": "Madhya Pradesh", "pincode": "485001", "lat": 24.5928, "lng": 80.8270 }
+    }
+  },
+
+  "Zone IX": {
+    "name": "Western Plateau and Hills Region",
+    "id": 9,
+    "states": ["Maharashtra (Vidarbha/Marathwada)", "Madhya Pradesh (Western)"],
+    "suitable_crops": ["Cotton", "Jowar", "Soybean", "Sunflower", "Maize", "Groundnut", "Tur (Arhar)", "Chickpea"],
+    "rainfall_mm": "600-1000",
+    "soil_type": "Black Cotton (Vertisol)",
+    "temperature_c": "12-45",
+    "kharif_crops": ["Cotton", "Soybean", "Jowar", "Maize", "Sunflower"],
+    "rabi_crops": ["Chickpea", "Wheat", "Safflower", "Sunflower", "Mustard"],
+    "districts": {
+      "Nagpur":      { "state": "Maharashtra", "pincode": "440001", "lat": 21.1458, "lng": 79.0882 },
+      "Amravati":    { "state": "Maharashtra", "pincode": "444601", "lat": 20.9374, "lng": 77.7796 },
+      "Aurangabad":  { "state": "Maharashtra", "pincode": "431001", "lat": 19.8762, "lng": 75.3433 },
+      "Latur":       { "state": "Maharashtra", "pincode": "413512", "lat": 18.4088, "lng": 76.5604 },
+      "Akola":       { "state": "Maharashtra", "pincode": "444001", "lat": 20.7002, "lng": 77.0082 },
+      "Nanded":      { "state": "Maharashtra", "pincode": "431601", "lat": 19.1383, "lng": 77.3210 },
+      "Yavatmal":    { "state": "Maharashtra", "pincode": "445001", "lat": 20.3888, "lng": 78.1204 }
+    }
+  },
+
+  "Zone X": {
+    "name": "Southern Plateau and Hills Region",
+    "id": 10,
+    "states": ["Karnataka (Interior)", "Andhra Pradesh (Interior)", "Telangana", "Tamil Nadu (Interior)"],
+    "suitable_crops": ["Ragi", "Groundnut", "Cotton", "Maize", "Sunflower", "Jowar", "Tomato", "Chilli"],
+    "rainfall_mm": "700-1000",
+    "soil_type": "Red Laterite / Black Cotton",
+    "temperature_c": "15-40",
+    "kharif_crops": ["Cotton", "Maize", "Jowar", "Groundnut", "Sunflower"],
+    "rabi_crops": ["Ragi", "Chickpea", "Sunflower", "Safflower", "Mustard"],
+    "districts": {
+      "Bangalore":   { "state": "Karnataka",        "pincode": "560001", "lat": 12.9716, "lng": 77.5946 },
+      "Mysore":      { "state": "Karnataka",        "pincode": "570001", "lat": 12.2958, "lng": 76.6394 },
+      "Hubli":       { "state": "Karnataka",        "pincode": "580001", "lat": 15.3647, "lng": 75.1240 },
+      "Bellary":     { "state": "Karnataka",        "pincode": "583101", "lat": 15.1394, "lng": 76.9214 },
+      "Davanagere":  { "state": "Karnataka",        "pincode": "577001", "lat": 14.4644, "lng": 75.9213 },
+      "Hyderabad":   { "state": "Telangana",        "pincode": "500001", "lat": 17.3850, "lng": 78.4867 },
+      "Warangal":    { "state": "Telangana",        "pincode": "506001", "lat": 17.9784, "lng": 79.5941 },
+      "Nizamabad":   { "state": "Telangana",        "pincode": "503001", "lat": 18.6725, "lng": 78.0941 },
+      "Kurnool":     { "state": "Andhra Pradesh",   "pincode": "518001", "lat": 15.8281, "lng": 78.0373 },
+      "Anantapur":   { "state": "Andhra Pradesh",   "pincode": "515001", "lat": 14.6819, "lng": 77.6006 },
+      "Coimbatore":  { "state": "Tamil Nadu",       "pincode": "641001", "lat": 11.0168, "lng": 76.9558 },
+      "Madurai":     { "state": "Tamil Nadu",       "pincode": "625001", "lat": 9.9252,  "lng": 78.1198 },
+      "Salem":       { "state": "Tamil Nadu",       "pincode": "636001", "lat": 11.6643, "lng": 78.1460 },
+      "Trichy":      { "state": "Tamil Nadu",       "pincode": "620001", "lat": 10.7905, "lng": 78.7047 }
+    }
+  },
+
+  "Zone XI": {
+    "name": "East Coast Plains and Hills Region",
+    "id": 11,
+    "states": ["Odisha (Coast)", "Andhra Pradesh (Coast)", "Tamil Nadu (Coast)", "Pondicherry"],
+    "suitable_crops": ["Rice", "Groundnut", "Cotton", "Sugarcane", "Banana", "Chilli", "Pulses", "Cashew"],
+    "rainfall_mm": "1200-1400",
+    "soil_type": "Coastal Alluvial / Red Sandy",
+    "temperature_c": "20-40",
+    "kharif_crops": ["Rice", "Cotton", "Groundnut", "Sugarcane", "Sesame"],
+    "rabi_crops": ["Rice (Rabi)", "Groundnut", "Sunflower", "Chickpea", "Vegetables"],
+    "districts": {
+      "Visakhapatnam":{ "state": "Andhra Pradesh", "pincode": "530001", "lat": 17.6868, "lng": 83.2185 },
+      "Vijayawada":   { "state": "Andhra Pradesh", "pincode": "520001", "lat": 16.5062, "lng": 80.6480 },
+      "Guntur":       { "state": "Andhra Pradesh", "pincode": "522001", "lat": 16.3067, "lng": 80.4365 },
+      "Nellore":      { "state": "Andhra Pradesh", "pincode": "524001", "lat": 14.4426, "lng": 79.9865 },
+      "Puri":         { "state": "Odisha",         "pincode": "752001", "lat": 19.8135, "lng": 85.8312 },
+      "Balasore":     { "state": "Odisha",         "pincode": "756001", "lat": 21.4934, "lng": 86.9330 },
+      "Pondicherry":  { "state": "Puducherry",     "pincode": "605001", "lat": 11.9416, "lng": 79.8083 },
+      "Chennai":      { "state": "Tamil Nadu",     "pincode": "600001", "lat": 13.0827, "lng": 80.2707 },
+      "Thanjavur":    { "state": "Tamil Nadu",     "pincode": "613001", "lat": 10.7870, "lng": 79.1378 }
+    }
+  },
+
+  "Zone XII": {
+    "name": "West Coast Plains and Ghats Region",
+    "id": 12,
+    "states": ["Kerala", "Karnataka (Coast)", "Maharashtra (Konkan)", "Goa"],
+    "suitable_crops": ["Rice", "Coconut", "Arecanut", "Cashew", "Rubber", "Banana", "Spices", "Jackfruit"],
+    "rainfall_mm": "2000-3500",
+    "soil_type": "Laterite / Coastal Alluvial",
+    "temperature_c": "20-35",
+    "kharif_crops": ["Rice", "Banana", "Vegetables", "Coconut"],
+    "rabi_crops": ["Rice (summer)", "Vegetables", "Coconut (perennial)"],
+    "districts": {
+      "Thiruvananthapuram":{ "state": "Kerala",      "pincode": "695001", "lat": 8.5241,  "lng": 76.9366 },
+      "Kochi":       { "state": "Kerala",      "pincode": "682001", "lat": 9.9312,  "lng": 76.2673 },
+      "Kozhikode":   { "state": "Kerala",      "pincode": "673001", "lat": 11.2588, "lng": 75.7804 },
+      "Thrissur":    { "state": "Kerala",      "pincode": "680001", "lat": 10.5276, "lng": 76.2144 },
+      "Kannur":      { "state": "Kerala",      "pincode": "670001", "lat": 11.8745, "lng": 75.3704 },
+      "Mangalore":   { "state": "Karnataka",   "pincode": "575001", "lat": 12.9141, "lng": 74.8560 },
+      "Panaji":      { "state": "Goa",         "pincode": "403001", "lat": 15.4909, "lng": 73.8278 },
+      "Mumbai":      { "state": "Maharashtra", "pincode": "400001", "lat": 18.9388, "lng": 72.8354 },
+      "Ratnagiri":   { "state": "Maharashtra", "pincode": "415612", "lat": 16.9944, "lng": 73.3000 },
+      "Pune":        { "state": "Maharashtra", "pincode": "411001", "lat": 18.5204, "lng": 73.8567 }
+    }
+  },
+
+  "Zone XIII": {
+    "name": "Gujarat Plains and Hills Region",
+    "id": 13,
+    "states": ["Gujarat"],
+    "suitable_crops": ["Cotton", "Groundnut", "Bajra", "Wheat", "Castor", "Cumin", "Fennel", "Sesame"],
+    "rainfall_mm": "500-800",
+    "soil_type": "Medium Black / Sandy Loam / Alluvial",
+    "temperature_c": "12-45",
+    "kharif_crops": ["Cotton", "Groundnut", "Bajra", "Sesame", "Castor"],
+    "rabi_crops": ["Wheat", "Mustard", "Cumin", "Fennel", "Chickpea"],
+    "districts": {
+      "Ahmedabad":   { "state": "Gujarat", "pincode": "380001", "lat": 23.0225, "lng": 72.5714 },
+      "Surat":       { "state": "Gujarat", "pincode": "395001", "lat": 21.1702, "lng": 72.8311 },
+      "Vadodara":    { "state": "Gujarat", "pincode": "390001", "lat": 22.3072, "lng": 73.1812 },
+      "Rajkot":      { "state": "Gujarat", "pincode": "360001", "lat": 22.3039, "lng": 70.8022 },
+      "Gandhinagar": { "state": "Gujarat", "pincode": "382001", "lat": 23.2156, "lng": 72.6369 },
+      "Bhavnagar":   { "state": "Gujarat", "pincode": "364001", "lat": 21.7645, "lng": 72.1519 },
+      "Junagadh":    { "state": "Gujarat", "pincode": "362001", "lat": 21.5222, "lng": 70.4579 },
+      "Anand":       { "state": "Gujarat", "pincode": "388001", "lat": 22.5645, "lng": 72.9289 }
+    }
+  },
+
+  "Zone XIV": {
+    "name": "Western Dry Region",
+    "id": 14,
+    "states": ["Rajasthan (Arid/Semi-Arid)"],
+    "suitable_crops": ["Bajra", "Wheat", "Mustard", "Cluster Bean (Guar)", "Cumin", "Moth Bean", "Sesame", "Fennel"],
+    "rainfall_mm": "150-500",
+    "soil_type": "Sandy / Sandy Loam (Aridisol)",
+    "temperature_c": "5-48",
+    "kharif_crops": ["Bajra", "Moth Bean", "Cluster Bean", "Sesame", "Groundnut"],
+    "rabi_crops": ["Wheat", "Mustard", "Cumin", "Fennel", "Chickpea"],
+    "districts": {
+      "Jaipur":      { "state": "Rajasthan", "pincode": "302001", "lat": 26.9124, "lng": 75.7873 },
+      "Jodhpur":     { "state": "Rajasthan", "pincode": "342001", "lat": 26.2389, "lng": 73.0243 },
+      "Bikaner":     { "state": "Rajasthan", "pincode": "334001", "lat": 28.0229, "lng": 73.3119 },
+      "Jaisalmer":   { "state": "Rajasthan", "pincode": "345001", "lat": 26.9157, "lng": 70.9083 },
+      "Barmer":      { "state": "Rajasthan", "pincode": "344001", "lat": 25.7463, "lng": 71.3922 },
+      "Ajmer":       { "state": "Rajasthan", "pincode": "305001", "lat": 26.4499, "lng": 74.6399 },
+      "Udaipur":     { "state": "Rajasthan", "pincode": "313001", "lat": 24.5854, "lng": 73.7125 },
+      "Sikar":       { "state": "Rajasthan", "pincode": "332001", "lat": 27.6094, "lng": 75.1398 }
+    }
+  },
+
+  "Zone XV": {
+    "name": "The Islands Region",
+    "id": 15,
+    "states": ["Andaman & Nicobar Islands", "Lakshadweep"],
+    "suitable_crops": ["Rice", "Coconut", "Arecanut", "Vegetables", "Tropical Fruits", "Spices"],
+    "rainfall_mm": "2000-3500",
+    "soil_type": "Coastal Sandy / Laterite",
+    "temperature_c": "23-32",
+    "kharif_crops": ["Rice", "Vegetables", "Banana"],
+    "rabi_crops": ["Vegetables", "Coconut (perennial)", "Spices"],
+    "districts": {
+      "Port Blair":  { "state": "Andaman & Nicobar Islands", "pincode": "744101", "lat": 11.6234, "lng": 92.7265 },
+      "Kavaratti":   { "state": "Lakshadweep",               "pincode": "682555", "lat": 10.5669, "lng": 72.6420 }
+    }
+  }
+}
