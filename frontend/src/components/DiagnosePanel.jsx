@@ -99,25 +99,28 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
   }
 
   return (
-    <div className="card">
-      <div className="card-title">
-        <span>🌿</span> Diagnose Your Crop
+    <div className="glass-panel" style={{ background: 'rgba(4, 20, 14, 0.45)' }}>
+      <div className="card-title" style={{ color: 'var(--green-500)' }}>
+        <span>🌿</span> Diagnose Crop
       </div>
 
       {/* Upload Zone */}
       <div
-        className={`upload-zone ${dragging ? 'drag-over' : ''}`}
+        className="upload-zone"
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         onClick={() => !preview && document.getElementById('file-input').click()}
       >
+        {/* Futuristic scanning laser */}
+        {(preview || loading) && <div className="scanner-line" />}
+
         <input
           id="file-input"
           type="file"
           accept="image/*"
-          onChange={e => handleFile(e.target.files[0])}
           style={{ display: 'none' }}
+          onChange={e => handleFile(e.target.files[0])}
         />
         {preview ? (
           <>
@@ -152,8 +155,8 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
             maxLength={6}
           />
         </div>
-        <div className="form-group">
-          <label>🌐 Language</label>
+          <div className="form-group">
+          <label>🌐 Advisory Language</label>
           <select
             className="form-select"
             value={language}
@@ -168,24 +171,26 @@ export default function DiagnosePanel({ onDiagnosed, onOutbreakUpdate }) {
 
       {error && (
         <div style={{
-          marginTop: 16, padding: '12px 16px',
-          background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-          borderRadius: 'var(--radius-md)', color: 'var(--red-400)', fontSize: 13,
+          marginTop: 20, padding: '12px 16px',
+          background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)',
+          borderRadius: 'var(--radius-sm)', color: 'var(--red-400)', fontSize: 13,
         }}>
           ⚠️ {error}
         </div>
       )}
 
+      {/* Action Button */}
       <button
         className="btn btn-primary"
         onClick={handleSubmit}
         disabled={loading || !image}
         id="diagnose-btn"
+        style={{ width: '100%', marginTop: 24 }}
       >
         {loading ? (
-          <><div className="spinner" style={{ width: 18, height: 18 }} /> Analysing your crop…</>
+          <><div className="spinner" style={{ width: 18, height: 18, marginRight: 8 }} /> Scanning Harvest…</>
         ) : (
-          <><span>🔍</span> Diagnose &amp; Get Advisory</>
+          <><span>🔍</span> Start Diagnostic Scan</>
         )}
       </button>
     </div>
