@@ -4,6 +4,7 @@ import ResultBubble   from './components/ResultBubble'
 import OutbreakBanner from './components/OutbreakBanner'
 import DalalChat      from './components/DalalChat'
 import MapPanel       from './components/MapPanel'
+import FarmerView     from './components/FarmerView'
 
 const IS_DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true'
 
@@ -13,9 +14,10 @@ export default function App() {
   const [outbreak, setOutbreak]     = useState(null)
 
   const tabs = [
-    { id: 'diagnose', label: 'Diagnose',        emoji: '🔬' },
-    { id: 'dalal',    label: 'AI Dalal',         emoji: '🤝' },
-    { id: 'radar',    label: 'Outbreak Radar',   emoji: '🚨' },
+    { id: 'diagnose',    label: 'Diagnose',      emoji: '🔬' },
+    { id: 'farmer',      label: 'Farmer View',   emoji: '📱' },
+    { id: 'dalal',       label: 'AI Dalal',      emoji: '🤝' },
+    { id: 'radar',       label: 'Outbreak Radar',emoji: '🚨' },
   ]
 
   return (
@@ -26,12 +28,12 @@ export default function App() {
         <div className="header-brand">
           <div className="brand-icon">🌾</div>
           <div className="brand-text">
-            <h1>FunctionalAgro</h1>
-            <p>AI-powered crop intelligence for Indian farmers</p>
+            <h1>Kisan Alert</h1>
+            <p>AI crop intelligence for every Indian farmer</p>
           </div>
         </div>
         <div className="header-badge">
-          <span className="badge">AIKosh</span>
+          <span className="badge">ICAR Zones</span>
           <span className="badge">Bhashini</span>
           <span className="badge">Agmarknet</span>
           <span className="badge">Gemini 1.5</span>
@@ -116,27 +118,41 @@ export default function App() {
             </div>
           </div>
 
-          {/* CTA to Dalal if diagnosis complete */}
+          {/* CTA row after diagnosis */}
           {result && !result.diagnosis.is_healthy && (
             <div style={{
               marginTop: 20, padding: '16px 24px',
               background: 'var(--bg-card)', border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap',
             }}>
               <div>
                 <div style={{ fontWeight: 600 }}>💰 Sell before prices drop?</div>
-                <div className="text-muted">Disease detected — check AI Dalal for best market price.</div>
+                <div className="text-muted">Disease detected — get farmer view or check AI Dalal.</div>
               </div>
-              <button
-                className="btn btn-secondary"
-                onClick={() => setActiveTab('dalal')}
-                id="go-to-dalal-btn"
-              >
-                Open AI Dalal →
-              </button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="btn btn-secondary" onClick={() => setActiveTab('farmer')} id="go-to-farmer-btn">
+                  📱 Farmer View
+                </button>
+                <button className="btn btn-secondary" onClick={() => setActiveTab('dalal')} id="go-to-dalal-btn">
+                  🤝 AI Dalal →
+                </button>
+              </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Tab: Farmer View */}
+      {activeTab === 'farmer' && (
+        <div>
+          <div className="section-title">
+            📱 Farmer View
+            <span className="text-muted" style={{ fontSize: 14, fontWeight: 400 }}>
+              — what a farmer sees on WhatsApp/SMS · no app install needed
+            </span>
+          </div>
+          <FarmerView diagnosisResult={result} />
         </div>
       )}
 

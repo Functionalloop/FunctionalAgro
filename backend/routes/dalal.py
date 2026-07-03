@@ -1,8 +1,8 @@
 """
 POST /api/dalal-negotiate
-AI Dalal — 3 Gemini-powered trader personas bid on the farmer's crop.
+AI Dalal -- 3 Gemini-powered trader personas bid on the farmer's crop.
 Seeded with real Agmarknet prices + transport cost factor.
-Cross-checks Outbreak Radar — warns farmer to sell if disease pressure is high.
+Cross-checks Outbreak Radar -- warns farmer to sell if disease pressure is high.
 """
 import json
 import os
@@ -12,7 +12,6 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-import google.generativeai as genai
 
 from backend.database import get_db, Diagnosis
 
@@ -21,10 +20,10 @@ router = APIRouter()
 GEMINI_API_KEY   = os.getenv("GEMINI_API_KEY", "")
 DEMO_MODE        = os.getenv("DEMO_MODE", "false").lower() == "true"
 PRICES_PATH      = os.path.join(os.path.dirname(__file__), "..", "..", "data", "agmarknet_cache.json")
-OUTBREAK_THRESH  = int(os.getenv("OUTBREAK_THRESHOLD", "3"))   # configurable via env
-WINDOW_DAYS      = int(os.getenv("OUTBREAK_WINDOW_DAYS", "7")) # configurable via env
+OUTBREAK_THRESH  = int(os.getenv("OUTBREAK_THRESHOLD", "3"))
+WINDOW_DAYS      = int(os.getenv("OUTBREAK_WINDOW_DAYS", "7"))
 
-# Gemini model — configured once at startup by main.py
+# Gemini model -- lazy loaded
 _gemini_model = None
 
 _prices: dict = {}
@@ -39,9 +38,17 @@ def _load_prices() -> dict:
 
 def _get_model():
     global _gemini_model
-    if _gemini_model is None:
-        if not GEMINI_API_KEY:
-            raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set in .env")
+    if _gemini_model is not None:
+        return _gemini_model
+    if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set in .env")
+    try:
+        import google.genai as genai
+        genai.configure(api_key=GEMINI_API_KEY)
+        _gemini_model = genai.GenerativeModel("gemini-1.5-flash")
+    except (ImportError, AttributeError):
+        import google.generativeai as genai  # type: ignore
+        genai.configure(api_key=GEMINI_API_KEY)
         _gemini_model = genai.GenerativeModel("gemini-1.5-flash")
     return _gemini_model
 

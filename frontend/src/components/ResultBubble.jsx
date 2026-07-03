@@ -71,20 +71,59 @@ export default function ResultBubble({ result }) {
         <div className="sms-bubble" style={{ animationDelay: '0.1s' }}>
           <div className="sms-header">
             <span className="sms-tag">🗺️ Zone &amp; Crop Recommendation</span>
+            {zone.data_source && (
+              <span style={{ fontSize: 10, color: 'var(--green-400)', fontWeight: 600, letterSpacing: 0.5 }}>
+                ✅ ICAR DATA
+              </span>
+            )}
           </div>
-          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>
+          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>
             {zone.zone}
           </div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>
-            {zone.district}, {zone.state} · {zone.soil_type} · {zone.rainfall_mm} mm rainfall
+            {zone.district}, {zone.state} · {zone.soil_type} · {zone.rainfall_mm} mm/yr
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
-            Suitable crops for your region (AIKosh data):
-          </div>
-          <div className="zone-chips">
-            {zone.suitable_crops?.map((crop, i) => (
-              <span key={i} className={`zone-chip ${i < 2 ? 'highlight' : ''}`}>{crop}</span>
-            ))}
+
+          {/* Kharif / Rabi split */}
+          {(zone.kharif_crops?.length > 0 || zone.rabi_crops?.length > 0) ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6, fontWeight: 600 }}>
+                  ☀️ KHARIF (Jun–Oct)
+                </div>
+                <div className="zone-chips" style={{ gap: 4 }}>
+                  {zone.kharif_crops.map((c, i) => (
+                    <span key={i} className={`zone-chip ${i === 0 ? 'highlight' : ''}`}>{c}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6, fontWeight: 600 }}>
+                  ❄️ RABI (Nov–Mar)
+                </div>
+                <div className="zone-chips" style={{ gap: 4 }}>
+                  {zone.rabi_crops.map((c, i) => (
+                    <span key={i} className={`zone-chip ${i === 0 ? 'highlight' : ''}`}>{c}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                Suitable crops for your region:
+              </div>
+              <div className="zone-chips">
+                {zone.suitable_crops?.map((crop, i) => (
+                  <span key={i} className={`zone-chip ${i < 2 ? 'highlight' : ''}`}>{crop}</span>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* ICAR citation */}
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 10, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
+            📚 {zone.data_source || zone.citation || 'ICAR NARP 15 Agro-Climatic Zone Classification'}
           </div>
         </div>
       )}
