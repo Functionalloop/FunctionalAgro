@@ -9,6 +9,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, File, Form, UploadFile, HTTPException, Depends
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 from PIL import Image
 import io
 
@@ -121,4 +122,40 @@ async def diagnose(
         "pincode": pincode,
         "timestamp": record.timestamp.isoformat(),
         "is_healthy": disease.lower() == "healthy",
+    }
+
+class DiagnoseLogRequest(BaseModel):
+    crop: str
+    disease: str
+    pincode: str
+    is_healthy: bool
+    raw_tfjs_class: str = None
+
+@router.post("/diagnose-log")
+async def diagnose_log(
+    req: DiagnoseLogRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Accepts a lightweight JSON payload from the frontend Edge AI (TFJS).
+    Writes a geotagged record for Outbreak Radar without uploading the image.
+    """
+    record = Diagnosis(
+        pincode=req.pincode,
+        crop=req.crop,
+        disease=req.disease,
+        confidence=0.99, # Pre-calculated on edge
+        timestamp=datetime.utcnow(),
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+
+    return {
+        "id": record.id,
+        "crop": req.crop,
+        "disease": req.disease,
+        "pincode": req.pincode,
+        "is_healthy": req.is_healthy,
+        "logged_to_radar": True
     }

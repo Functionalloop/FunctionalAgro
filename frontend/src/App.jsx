@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DiagnosePanel  from './components/DiagnosePanel'
 import ResultBubble   from './components/ResultBubble'
 import OutbreakBanner from './components/OutbreakBanner'
 import DalalChat      from './components/DalalChat'
 import MapPanel       from './components/MapPanel'
 import FarmerView     from './components/FarmerView'
+import { auth, provider } from './firebase'
+import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
 
 const IS_DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true'
 
@@ -12,6 +14,30 @@ export default function App() {
   const [activeTab, setActiveTab]   = useState('diagnose')
   const [result, setResult]         = useState(null)
   const [outbreak, setOutbreak]     = useState(null)
+  const [user, setUser]             = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const handleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, provider)
+    } catch (error) {
+      console.error("Error signing in with Google", error)
+    }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error("Error signing out", error)
+    }
+  }
 
   const tabs = [
     { id: 'diagnose',    label: 'Diagnose',      emoji: '🔬' },
@@ -32,11 +58,24 @@ export default function App() {
             <p>AI crop intelligence for every Indian farmer</p>
           </div>
         </div>
-        <div className="header-badge">
-          <span className="badge">ICAR Zones</span>
-          <span className="badge">Bhashini</span>
-          <span className="badge">Agmarknet</span>
-          <span className="badge">Gemini 1.5</span>
+        <div className="header-badge" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div>
+            <span className="badge">ICAR Zones</span>
+            <span className="badge">Bhashini</span>
+            <span className="badge">Agmarknet</span>
+            <span className="badge">Gemini 1.5</span>
+          </div>
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {user.photoURL && <img src={user.photoURL} alt="Profile" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
+              <span style={{ fontSize: '12px', fontWeight: 600 }}>{user.displayName?.split(' ')[0] || 'User'}</span>
+              <button onClick={handleSignOut} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '12px' }}>Sign Out</button>
+            </div>
+          ) : (
+            <button onClick={handleSignIn} className="btn btn-primary" style={{ padding: '4px 8px', fontSize: '12px' }}>
+              Sign in with Google
+            </button>
+          )}
         </div>
       </header>
 

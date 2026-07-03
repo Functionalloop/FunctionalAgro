@@ -22,7 +22,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.database import init_db
-from backend.routes import diagnose, recommend, advise, outbreak, dalal, farmer_input, live_prices
+from backend.routes import diagnose, recommend, advise, outbreak, dalal, farmer_input, live_prices, alerts
+import asyncio
+from backend.tasks.price_monitor import monitor_prices_loop
 
 app = FastAPI(
     title="Kisan Alert API",
@@ -52,6 +54,7 @@ app.include_router(outbreak.router,  prefix="/api", tags=["Outbreak Radar"])
 app.include_router(dalal.router,         prefix="/api", tags=["AI Dalal"])
 app.include_router(farmer_input.router,  prefix="/api", tags=["Farmer Input"])
 app.include_router(live_prices.router,   prefix="/api", tags=["Live Prices"])
+app.include_router(alerts.router,        prefix="/api", tags=["Alerts"])
 
 
 def _configure_gemini():
@@ -82,6 +85,8 @@ async def startup_event():
     _configure_gemini()
     demo_mode = os.getenv("DEMO_MODE", "false").lower() == "true"
     print(f"[OK] Kisan Alert backend started. Demo mode: {demo_mode}")
+    # Start the price monitor background task
+    asyncio.create_task(monitor_prices_loop())
 
 
 @app.get("/", tags=["Health"])

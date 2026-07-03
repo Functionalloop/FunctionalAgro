@@ -5,6 +5,8 @@ Accepts crop + disease + language + pincode -> Gemini advisory -> Bhashini trans
 import os
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+import json
+import requests
 
 from backend.language import translate, text_to_speech
 
@@ -12,6 +14,7 @@ router = APIRouter()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 DEMO_MODE      = os.getenv("DEMO_MODE", "false").lower() == "true"
+ZONE_PATH      = os.path.join(os.path.dirname(__file__), "..", "..", "data", "pincode_zone_crops.json")
 
 # Lazy-loaded Gemini model
 _gemini_model = None
@@ -50,15 +53,50 @@ The farmer's crop has been diagnosed with the following:
 - Crop: {crop}
 - Disease: {disease}
 - Location pincode: {pincode}
+- Upcoming 3-Day Weather: {weather}
 
 Provide clear, practical advisory in 3–4 short sentences covering:
 1. What this disease is (in simple terms)
 2. Immediate action the farmer should take (spray, isolate, etc.)
-3. Preventive measures for the future
+3. Preventive measures for the future. VERY IMPORTANT: Base your advice on the weather (e.g., if it will rain, tell them to delay spraying or use stickers).
 
 Use simple, direct language — the farmer may have limited education. Do NOT use technical jargon.
 Reply only with the advisory text, no headers or bullet points.
 """
+
+_zone_data = {}
+def _load_zones():
+    global _zone_data
+    if not _zone_data and os.path.exists(ZONE_PATH):
+        with open(ZONE_PATH) as f:
+            _zone_data = json.load(f)
+    return _zone_data
+
+def _get_weather_forecast(pincode: str) -> str:
+    """Fetches a 3-day weather summary using free Open-Meteo API."""
+    zones = _load_zones()
+    data = zones.get(pincode) or zones.get(pincode[:3] + "000") # fuzzy fallback
+    if not data:
+        return "Unknown weather"
+    
+    lat, lng = data.get("lat"), data.get("lng")
+    if not lat or not lng:
+        return "Unknown weather"
+
+    try:
+        url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lng}&daily=weathercode&timezone=auto&forecast_days=3"
+        resp = requests.get(url, timeout=3)
+        if resp.status_code == 200:
+            codes = resp.json().get("daily", {}).get("weathercode", [])
+            # Simple WMO mapping: 0-3 clear/cloudy, 45+ rain/fog/snow
+            has_rain = any(c >= 51 for c in codes)
+            if has_rain:
+                return "Rain expected in the next 3 days."
+            else:
+                return "Clear or mostly cloudy, no significant rain expected."
+    except Exception as e:
+        print(f"Weather API error: {e}")
+    return "Unknown weather"
 
 
 @router.post("/advise")
@@ -84,10 +122,12 @@ def advise(req: AdviseRequest):
         )
     else:
         model = _get_gemini_model()
+        weather_desc = _get_weather_forecast(req.pincode)
         prompt = ADVISORY_PROMPT.format(
             crop=req.crop,
             disease=req.disease,
             pincode=req.pincode,
+            weather=weather_desc,
         )
         try:
             if hasattr(model, "models"):  # New SDK
