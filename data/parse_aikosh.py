@@ -1,385 +1,490 @@
-"""
-AIKosh Data Parser — Phase 1
-Converts real AIKosh files into FunctionalAgro lookup JSONs.
+import sys, os
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
-Usage (run after placing files in data/raw/):
+"""
+AIKosh Data Parser — Phase 2 (Real Dataset Integration)
+Converts real AIKosh CSV files into FunctionalAgro lookup JSONs.
+
+Usage (run from project root):
     python data/parse_aikosh.py
 
 Inputs:
-    data/raw/agro_climatic_zone.xlsx     ← from AIKosh Agro Climatic Zone dataset
-    data/raw/agri_infra_fund.csv         ← from AIKosh Agri Infra Fund dataset
+    data/raw/agro_climatic_zone.csv   ← AIKosh Agro Climatic Zone Registry
+    data/raw/agri_infra_fund.csv      ← AIKosh Agri Infra Fund Dataset
 
 Outputs:
-    data/pincode_zone_crops.json         ← overwrites the hardcoded placeholder
-    data/agri_infra_schemes.json         ← new: eligible govt schemes per state/crop
+    data/pincode_zone_crops.json      ← district/state → zone + crops (used by /api/recommend-crop)
+    data/agri_infra_schemes.json      ← state → AIF scheme summary (used by /api/recommend-crop)
+    data/aif_geo_projects.json        ← individual geo-tagged AIF projects (used by /api/aif-map)
+
+Real column names (from AIKosh):
+  Zone CSV:  Sr No., Acz Code, Acz Name, State Name, State Lgd Code,
+             District Lgd Code, District Name, Active Date, Inactive Date
+  AIF  CSV:  BeneficiaryID, BeneficiaryType, Category, Loan_Application_Number,
+             Is_Individual, Project_Name, Loan_Application_Status_Name,
+             Approved_Loan_Amount_AIF, Approved_Loan_Term_Year, Approved_Loan_Term_Month,
+             Gender, Project_Description, Project_Cost, Project_Type,
+             Loan_Application_Type, Project_State_Name, Project_State_Code,
+             Project_District_Name, Project_District_Code, Project_Village_Name,
+             Project_Village_Code, Project_Geo_Latitude, Project_Geo_Longitude,
+             Project_Geo_Fencing, Project_Geo_Fencing_Type, Project_Geo_Update_Date,
+             Scheme_Type, Is_Geo_Data_Updated_By_Krishi_Mapper_App
 """
 
+import csv
 import json
 import os
 import sys
 
-RAW_DIR   = os.path.join(os.path.dirname(__file__), "raw")
-OUT_DIR   = os.path.dirname(__file__)
+RAW_DIR  = os.path.join(os.path.dirname(__file__), "raw")
+OUT_DIR  = os.path.dirname(__file__)
 
-ZONE_FILE = os.path.join(RAW_DIR, "agro_climatic_zone.xlsx")
+ZONE_FILE = os.path.join(RAW_DIR, "agro_climatic_zone.csv")
 AIF_FILE  = os.path.join(RAW_DIR, "agri_infra_fund.csv")
 
-OUT_ZONE  = os.path.join(OUT_DIR, "pincode_zone_crops.json")
-OUT_AIF   = os.path.join(OUT_DIR, "agri_infra_schemes.json")
+OUT_ZONE     = os.path.join(OUT_DIR, "pincode_zone_crops.json")
+OUT_AIF      = os.path.join(OUT_DIR, "agri_infra_schemes.json")
+OUT_AIF_GEO  = os.path.join(OUT_DIR, "aif_geo_projects.json")
 
 
-# ── Agro-Climatic Zone parser ──────────────────────────────────────────────────
+# ── Agro-Climatic Zone metadata ──────────────────────────────────────────────
 
-# Fallback crop suitability by AIKosh zone name (used if xlsx doesn't include crops)
 ZONE_CROP_MAP = {
-    "Western Himalayan Region":          ["Apple", "Wheat", "Barley", "Pea", "Potato"],
-    "Eastern Himalayan Region":          ["Rice", "Maize", "Potato", "Ginger", "Cardamom"],
-    "Lower Gangetic Plains Region":      ["Rice", "Jute", "Mustard", "Potato", "Banana"],
-    "Middle Gangetic Plains Region":     ["Rice", "Wheat", "Sugarcane", "Potato", "Pea"],
-    "Upper Gangetic Plains Region":      ["Wheat", "Rice", "Sugarcane", "Potato", "Mustard"],
-    "Trans-Gangetic Plains Region":      ["Wheat", "Rice", "Sugarcane", "Mustard", "Maize"],
-    "Eastern Plateau and Hills Region":  ["Rice", "Maize", "Pulses", "Oilseeds", "Cotton"],
-    "Central Plateau and Hills Region":  ["Soybean", "Maize", "Cotton", "Jowar", "Groundnut"],
-    "Western Plateau and Hills Region":  ["Cotton", "Jowar", "Groundnut", "Soybean", "Maize"],
-    "Southern Plateau and Hills Region": ["Ragi", "Groundnut", "Cotton", "Maize", "Sunflower"],
-    "East Coast Plains and Hills Region":["Rice", "Groundnut", "Cotton", "Sugarcane", "Chilli"],
-    "West Coast Plains and Ghats Region":["Rice", "Coconut", "Cashew", "Arecanut", "Banana"],
-    "Gujarat Plains and Hills Region":   ["Cotton", "Groundnut", "Bajra", "Wheat", "Castor"],
-    "Western Dry Region":                ["Bajra", "Wheat", "Mustard", "Cluster Bean", "Cumin"],
-    "The Islands Region":                ["Rice", "Coconut", "Vegetables", "Tubers"],
+    "Western Himalayan Region":            ["Apple", "Wheat", "Barley", "Pea", "Potato"],
+    "Eastern Himalayan Region":            ["Rice", "Maize", "Potato", "Ginger", "Cardamom"],
+    "Lower Gangetic Plains":               ["Rice", "Jute", "Mustard", "Potato", "Banana"],
+    "Middle Gangetic Plains":              ["Rice", "Wheat", "Sugarcane", "Potato", "Pea"],
+    "Upper Gangetic Plains":               ["Wheat", "Rice", "Sugarcane", "Potato", "Mustard"],
+    "Trans-Gangetic Plains":               ["Wheat", "Rice", "Sugarcane", "Mustard", "Maize"],
+    "Eastern Plateau and Hill Region":     ["Rice", "Maize", "Pulses", "Oilseeds", "Cotton"],
+    "Central Plateau and Hill Region":     ["Soybean", "Maize", "Cotton", "Jowar", "Groundnut"],
+    "Western Plateau and Hill Region":     ["Cotton", "Jowar", "Groundnut", "Soybean", "Maize"],
+    "Southern Plateau and Hill Region":    ["Ragi", "Groundnut", "Cotton", "Maize", "Sunflower"],
+    "East Coast Plains & Hill Region":     ["Rice", "Groundnut", "Cotton", "Sugarcane", "Chilli"],
+    "Western coast plains and ghat region":["Rice", "Coconut", "Cashew", "Arecanut", "Banana"],
+    "Gujarat plains and hills region":     ["Cotton", "Groundnut", "Bajra", "Wheat", "Castor"],
+    "Western dry region":                  ["Bajra", "Wheat", "Mustard", "Cluster Bean", "Cumin"],
+    "The Islands Region":                  ["Rice", "Coconut", "Vegetables", "Tubers"],
 }
 
 ZONE_RAINFALL = {
-    "Western Himalayan Region":          "600-1200",
-    "Eastern Himalayan Region":          "2000-4000",
-    "Lower Gangetic Plains Region":      "1400-1800",
-    "Middle Gangetic Plains Region":     "1000-1400",
-    "Upper Gangetic Plains Region":      "750-1000",
-    "Trans-Gangetic Plains Region":      "600-800",
-    "Eastern Plateau and Hills Region":  "1000-1400",
-    "Central Plateau and Hills Region":  "800-1200",
-    "Western Plateau and Hills Region":  "600-900",
-    "Southern Plateau and Hills Region": "700-1000",
-    "East Coast Plains and Hills Region":"1200-1400",
-    "West Coast Plains and Ghats Region":"2000-3000",
-    "Gujarat Plains and Hills Region":   "500-700",
-    "Western Dry Region":                "200-500",
-    "The Islands Region":                "2000-3500",
+    "Western Himalayan Region":            "600-1200",
+    "Eastern Himalayan Region":            "2000-4000",
+    "Lower Gangetic Plains":               "1400-1800",
+    "Middle Gangetic Plains":              "1000-1400",
+    "Upper Gangetic Plains":               "750-1000",
+    "Trans-Gangetic Plains":               "600-800",
+    "Eastern Plateau and Hill Region":     "1000-1400",
+    "Central Plateau and Hill Region":     "800-1200",
+    "Western Plateau and Hill Region":     "600-900",
+    "Southern Plateau and Hill Region":    "700-1000",
+    "East Coast Plains & Hill Region":     "1200-1400",
+    "Western coast plains and ghat region":"2000-3000",
+    "Gujarat plains and hills region":     "500-700",
+    "Western dry region":                  "200-500",
+    "The Islands Region":                  "2000-3500",
 }
 
 ZONE_SOIL = {
-    "Western Himalayan Region":          "Mountain/Forest soil",
-    "Eastern Himalayan Region":          "Red Laterite",
-    "Lower Gangetic Plains Region":      "Deltaic Alluvial",
-    "Middle Gangetic Plains Region":     "Alluvial",
-    "Upper Gangetic Plains Region":      "Alluvial",
-    "Trans-Gangetic Plains Region":      "Alluvial",
-    "Eastern Plateau and Hills Region":  "Red & Yellow",
-    "Central Plateau and Hills Region":  "Black Cotton (Vertisol)",
-    "Western Plateau and Hills Region":  "Black Cotton (Vertisol)",
-    "Southern Plateau and Hills Region": "Red Laterite",
-    "East Coast Plains and Hills Region":"Coastal Alluvial",
-    "West Coast Plains and Ghats Region":"Laterite",
-    "Gujarat Plains and Hills Region":   "Medium Black",
-    "Western Dry Region":                "Sandy Loam (Aridisol)",
-    "The Islands Region":                "Sandy Coastal",
+    "Western Himalayan Region":            "Mountain/Forest soil",
+    "Eastern Himalayan Region":            "Red Laterite",
+    "Lower Gangetic Plains":               "Deltaic Alluvial",
+    "Middle Gangetic Plains":              "Alluvial",
+    "Upper Gangetic Plains":               "Alluvial",
+    "Trans-Gangetic Plains":               "Alluvial",
+    "Eastern Plateau and Hill Region":     "Red & Yellow",
+    "Central Plateau and Hill Region":     "Black Cotton (Vertisol)",
+    "Western Plateau and Hill Region":     "Black Cotton (Vertisol)",
+    "Southern Plateau and Hill Region":    "Red Laterite",
+    "East Coast Plains & Hill Region":     "Coastal Alluvial",
+    "Western coast plains and ghat region":"Laterite",
+    "Gujarat plains and hills region":     "Medium Black",
+    "Western dry region":                  "Sandy Loam (Aridisol)",
+    "The Islands Region":                  "Sandy Coastal",
 }
 
 
-def parse_zone_xlsx() -> dict:
-    """Parse AIKosh Agro Climatic Zone.xlsx → district/state → zone lookup."""
-    try:
-        import openpyxl
-    except ImportError:
-        print("❌ openpyxl not installed. Run: pip install openpyxl")
-        sys.exit(1)
+# Approximate district-centroid lat/lng for major districts
+# (zone CSV has no coordinates; AIF CSV geo is used for AIF projects separately)
+DISTRICT_COORDS = {
+    "Leh Ladakh":     (34.1526, 77.5771),
+    "Kargil":         (34.5539, 76.1349),
+    "Anantnag":       (33.7309, 75.1520),
+    "Srinagar":       (34.0837, 74.7973),
+    "Jammu":          (32.7266, 74.8570),
+    "Shimla":         (31.1048, 77.1734),
+    "Kangra":         (32.0998, 76.2691),
+    "Kullu":          (31.9578, 77.1095),
+    "Dehradun":       (30.3165, 78.0322),
+    "Haridwar":       (29.9457, 78.1642),
+    "Nainital":       (29.3803, 79.4636),
+    "Darjeeling":     (27.0360, 88.2627),
+    "Sikkim East":    (27.3389, 88.6065),
+    "Shillong":       (25.5788, 91.8933),
+    "Dibrugarh":      (27.4728, 94.9120),
+    "Guwahati":       (26.1445, 91.7362),
+    "Patna":          (25.5941, 85.1376),
+    "Muzaffarpur":    (26.1197, 85.3910),
+    "Varanasi":       (25.3176, 82.9739),
+    "Lucknow":        (26.8467, 80.9462),
+    "Kanpur Nagar":   (26.4499, 80.3319),
+    "Agra":           (27.1767, 78.0081),
+    "Meerut":         (28.9845, 77.7064),
+    "Amritsar":       (31.6340, 74.8723),
+    "Ludhiana":       (30.9010, 75.8573),
+    "Chandigarh":     (30.7333, 76.7794),
+    "Hisar":          (29.1492, 75.7217),
+    "Sonipat":        (28.9288, 77.0152),
+    "Gurugram":       (28.4595, 77.0266),
+    "Faridabad":      (28.4089, 77.3178),
+    "Jaipur":         (26.9124, 75.7873),
+    "Jodhpur":        (26.2389, 73.0243),
+    "Udaipur":        (24.5854, 73.7125),
+    "Bikaner":        (28.0229, 73.3119),
+    "Raipur":         (21.2514, 81.6296),
+    "Bhopal":         (23.2599, 77.4126),
+    "Indore":         (22.7196, 75.8577),
+    "Gwalior":        (26.2183, 78.1828),
+    "Jabalpur":       (23.1815, 79.9864),
+    "Nagpur":         (21.1458, 79.0882),
+    "Pune":           (18.5204, 73.8567),
+    "Mumbai":         (18.9388, 72.8354),
+    "Nashik":         (19.9975, 73.7898),
+    "Aurangabad":     (19.8762, 75.3433),
+    "Ahmedabad":      (23.0225, 72.5714),
+    "Surat":          (21.1702, 72.8311),
+    "Rajkot":         (22.3039, 70.8022),
+    "Vadodara":       (22.3072, 73.1812),
+    "Bangalore Urban":(12.9716, 77.5946),
+    "Bengaluru Urban":(12.9716, 77.5946),
+    "Mysuru":         (12.2958, 76.6394),
+    "Tumakuru":       (13.3379, 77.1173),
+    "Mangaluru":      (12.9141, 74.8560),
+    "Hyderabad":      (17.3850, 78.4867),
+    "Warangal":       (17.9784, 79.5941),
+    "Nizamabad":      (18.6725, 78.0941),
+    "Chennai":        (13.0827, 80.2707),
+    "Coimbatore":     (11.0168, 76.9558),
+    "Madurai":        (9.9252, 78.1198),
+    "Salem":          (11.6643, 78.1460),
+    "Kolkata":        (22.5726, 88.3639),
+    "Howrah":         (22.5958, 88.2636),
+    "Burdwan":        (23.2324, 87.8615),
+    "Malda":          (25.0108, 88.1414),
+    "Bhubaneswar":    (20.2961, 85.8245),
+    "Cuttack":        (20.4625, 85.8828),
+    "Ranchi":         (23.3441, 85.3096),
+    "Dhanbad":        (23.7957, 86.4304),
+    "New Delhi":      (28.6139, 77.2090),
+    "Central Delhi":  (28.6139, 77.2090),
+    "North Goa":      (15.4909, 73.8278),
+    "South Goa":      (15.1726, 74.0497),
+    "Ernakulam":      (9.9312, 76.2673),
+    "Thiruvananthapuram": (8.5241, 76.9366),
+    "Kozhikode":      (11.2588, 75.7804),
+}
 
-    wb = openpyxl.load_workbook(ZONE_FILE)
-    ws = wb.active
 
-    # Print column headers so we can understand the schema
-    headers = [str(cell.value).strip() if cell.value else "" for cell in ws[1]]
-    print(f"   AIKosh zone file headers: {headers}")
+# ── Parsers ──────────────────────────────────────────────────────────────────
 
+def _read_csv(path: str) -> list[dict]:
     rows = []
-    for row in ws.iter_rows(min_row=2, values_only=True):
-        if any(row):
-            rows.append(dict(zip(headers, row)))
-
-    print(f"   Total rows in zone file: {len(rows)}")
-    if rows:
-        print(f"   Sample row: {rows[0]}")
-
-    return rows
-
-
-def parse_aif_csv() -> list[dict]:
-    """Parse AIKosh Agri Infra Fund CSV → scheme records."""
-    try:
-        import csv
-    except ImportError:
-        pass  # csv is stdlib
-
-    rows = []
-    with open(AIF_FILE, encoding="utf-8-sig", errors="replace") as f:
+    with open(path, encoding="utf-8-sig", errors="replace") as f:
         reader = csv.DictReader(f)
         for row in reader:
             rows.append(dict(row))
-
-    print(f"   AIF file columns: {list(rows[0].keys()) if rows else 'empty'}")
-    print(f"   Total AIF rows: {len(rows)}")
-    if rows:
-        print(f"   Sample row: {dict(list(rows[0].items())[:5])}")
-
     return rows
 
 
 def build_zone_lookup(zone_rows: list[dict]) -> dict:
     """
     Build pincode_zone_crops.json from real AIKosh zone data.
-    AIKosh zone data is district-level, not pincode-level.
-    We map districts → pincodes using a standard district-pincode mapping.
+    Real columns: Acz Code, Acz Name, State Name, District Name, District Lgd Code
+    Groups districts by zone + state. Uses DISTRICT_COORDS for lat/lng.
     """
+    # district_name -> { zone, acz_code, state, districts_in_zone }
+    district_zone: dict[str, dict] = {}
 
-    # Standard district → pincode mapping (representative pincodes for demo)
-    DISTRICT_PINCODE = {
-        "Bangalore Urban":   {"pincode": "560001", "lat": 12.9716, "lng": 77.5946},
-        "Bengaluru Urban":   {"pincode": "560001", "lat": 12.9716, "lng": 77.5946},
-        "Mumbai":            {"pincode": "400001", "lat": 18.9388, "lng": 72.8354},
-        "Mumbai City":       {"pincode": "400001", "lat": 18.9388, "lng": 72.8354},
-        "Central Delhi":     {"pincode": "110001", "lat": 28.6139, "lng": 77.2090},
-        "New Delhi":         {"pincode": "110001", "lat": 28.6139, "lng": 77.2090},
-        "Chennai":           {"pincode": "600001", "lat": 13.0827, "lng": 80.2707},
-        "Hyderabad":         {"pincode": "500001", "lat": 17.3850, "lng": 78.4867},
-        "Jaipur":            {"pincode": "302001", "lat": 26.9124, "lng": 75.7873},
-        "Kanpur Nagar":      {"pincode": "208001", "lat": 26.4499, "lng": 80.3319},
-        "Kolkata":           {"pincode": "700001", "lat": 22.5726, "lng": 88.3639},
-        "Pune":              {"pincode": "411001", "lat": 18.5204, "lng": 73.8567},
-        "Ahmedabad":         {"pincode": "380001", "lat": 23.0225, "lng": 72.5714},
-    }
-
-    lookup = {}
-
-    # Try to extract zone data from AIKosh rows
     for row in zone_rows:
-        # AIKosh column names may vary — try common variations
-        district = (
-            row.get("District") or row.get("district") or
-            row.get("District Name") or row.get("DISTRICT") or ""
-        )
-        state = (
-            row.get("State") or row.get("state") or
-            row.get("State Name") or row.get("STATE") or ""
-        )
-        zone = (
-            row.get("Agro Climatic Zone") or row.get("Zone") or
-            row.get("Agro-climatic Zone") or row.get("ZONE") or
-            row.get("Agro Climatic Region") or ""
-        )
+        acz_code  = str(row.get("Acz Code", "")).strip()
+        acz_name  = str(row.get("Acz Name", "")).strip()
+        state     = str(row.get("State Name", "")).strip().title()
+        district  = str(row.get("District Name", "")).strip().title()
+        lgd_code  = str(row.get("District Lgd Code", "")).strip()
 
-        if not district or not zone:
+        if not acz_name or not district:
             continue
 
-        district = str(district).strip()
-        state    = str(state).strip()
-        zone     = str(zone).strip()
+        key = f"{district}|{state}"
+        if key not in district_zone:
+            district_zone[key] = {
+                "acz_code": acz_code,
+                "zone": acz_name,
+                "state": state,
+                "district": district,
+                "district_lgd_code": lgd_code,
+            }
 
-        if district in DISTRICT_PINCODE:
-            meta = DISTRICT_PINCODE[district]
-            pincode = meta["pincode"]
-            if pincode not in lookup:
-                lookup[pincode] = {
-                    "zone":          zone,
-                    "district":      district,
-                    "state":         state,
-                    "suitable_crops": ZONE_CROP_MAP.get(zone, ["Wheat", "Rice", "Maize"]),
-                    "rainfall_mm":   ZONE_RAINFALL.get(zone, "600-1000"),
-                    "soil_type":     ZONE_SOIL.get(zone, "Mixed"),
-                    "lat":           meta["lat"],
-                    "lng":           meta["lng"],
-                    "source":        "AIKosh — Ministry of Agriculture and Farmer Welfare",
-                }
+    print(f"   Unique district-state pairs found: {len(district_zone)}")
 
-    # Fallback: if xlsx columns don't match expected names, use zone name matching
-    if not lookup:
-        print("   ⚠️  Could not auto-detect column names. Printing all column names for manual check...")
-        if zone_rows:
-            print(f"   Columns found: {list(zone_rows[0].keys())}")
-        print("   Using hardcoded fallback with AIKosh zone names...")
-        # Return existing hardcoded data enriched with source tag
-        return _hardcoded_fallback()
+    # Build lookup keyed by district_lgd_code (numeric) used as a proxy key
+    # Also create a named-district lookup for the backend to use
+    lookup: dict = {}
+
+    for key, meta in district_zone.items():
+        zone      = meta["zone"]
+        district  = meta["district"]
+        state     = meta["state"]
+        lgd_code  = meta["district_lgd_code"]
+
+        # Resolve coordinates
+        lat, lng = DISTRICT_COORDS.get(district, (20.5937, 78.9629))  # India centroid fallback
+
+        # Use LGD code as a pseudo-pincode key (padded to 6 digits)
+        # Also store district name as lookup key for backend fuzzy matching
+        entry = {
+            "zone":           zone,
+            "acz_code":       meta["acz_code"],
+            "district":       district,
+            "state":          state,
+            "district_lgd_code": lgd_code,
+            "suitable_crops": ZONE_CROP_MAP.get(zone, ["Wheat", "Rice", "Maize"]),
+            "rainfall_mm":    ZONE_RAINFALL.get(zone, "600-1000"),
+            "soil_type":      ZONE_SOIL.get(zone, "Mixed"),
+            "lat":            lat,
+            "lng":            lng,
+            "source":         "AIKosh Agro Climatic Zone Registry — Ministry of Agriculture & Farmers Welfare, GoI",
+        }
+
+        # Store by district|state key (used by name-based lookup)
+        lookup[key] = entry
 
     return lookup
 
 
-def _hardcoded_fallback() -> dict:
-    """Return existing hardcoded zone data with AIKosh source attribution."""
-    return {
-        "560001": {
-            "zone": "Southern Plateau and Hills Region",
-            "district": "Bangalore Urban", "state": "Karnataka",
-            "suitable_crops": ZONE_CROP_MAP["Southern Plateau and Hills Region"],
-            "rainfall_mm": ZONE_RAINFALL["Southern Plateau and Hills Region"],
-            "soil_type": ZONE_SOIL["Southern Plateau and Hills Region"],
-            "lat": 12.9716, "lng": 77.5946,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "400001": {
-            "zone": "West Coast Plains and Ghats Region",
-            "district": "Mumbai", "state": "Maharashtra",
-            "suitable_crops": ZONE_CROP_MAP["West Coast Plains and Ghats Region"],
-            "rainfall_mm": ZONE_RAINFALL["West Coast Plains and Ghats Region"],
-            "soil_type": ZONE_SOIL["West Coast Plains and Ghats Region"],
-            "lat": 18.9388, "lng": 72.8354,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "110001": {
-            "zone": "Trans-Gangetic Plains Region",
-            "district": "Central Delhi", "state": "Delhi",
-            "suitable_crops": ZONE_CROP_MAP["Trans-Gangetic Plains Region"],
-            "rainfall_mm": ZONE_RAINFALL["Trans-Gangetic Plains Region"],
-            "soil_type": ZONE_SOIL["Trans-Gangetic Plains Region"],
-            "lat": 28.6139, "lng": 77.2090,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "600001": {
-            "zone": "East Coast Plains and Hills Region",
-            "district": "Chennai", "state": "Tamil Nadu",
-            "suitable_crops": ZONE_CROP_MAP["East Coast Plains and Hills Region"],
-            "rainfall_mm": ZONE_RAINFALL["East Coast Plains and Hills Region"],
-            "soil_type": ZONE_SOIL["East Coast Plains and Hills Region"],
-            "lat": 13.0827, "lng": 80.2707,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "500001": {
-            "zone": "Southern Plateau and Hills Region",
-            "district": "Hyderabad", "state": "Telangana",
-            "suitable_crops": ZONE_CROP_MAP["Southern Plateau and Hills Region"],
-            "rainfall_mm": ZONE_RAINFALL["Southern Plateau and Hills Region"],
-            "soil_type": ZONE_SOIL["Southern Plateau and Hills Region"],
-            "lat": 17.3850, "lng": 78.4867,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "302001": {
-            "zone": "Western Dry Region",
-            "district": "Jaipur", "state": "Rajasthan",
-            "suitable_crops": ZONE_CROP_MAP["Western Dry Region"],
-            "rainfall_mm": ZONE_RAINFALL["Western Dry Region"],
-            "soil_type": ZONE_SOIL["Western Dry Region"],
-            "lat": 26.9124, "lng": 75.7873,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "208001": {
-            "zone": "Upper Gangetic Plains Region",
-            "district": "Kanpur", "state": "Uttar Pradesh",
-            "suitable_crops": ZONE_CROP_MAP["Upper Gangetic Plains Region"],
-            "rainfall_mm": ZONE_RAINFALL["Upper Gangetic Plains Region"],
-            "soil_type": ZONE_SOIL["Upper Gangetic Plains Region"],
-            "lat": 26.4499, "lng": 80.3319,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "700001": {
-            "zone": "Lower Gangetic Plains Region",
-            "district": "Kolkata", "state": "West Bengal",
-            "suitable_crops": ZONE_CROP_MAP["Lower Gangetic Plains Region"],
-            "rainfall_mm": ZONE_RAINFALL["Lower Gangetic Plains Region"],
-            "soil_type": ZONE_SOIL["Lower Gangetic Plains Region"],
-            "lat": 22.5726, "lng": 88.3639,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "411001": {
-            "zone": "Western Plateau and Hills Region",
-            "district": "Pune", "state": "Maharashtra",
-            "suitable_crops": ZONE_CROP_MAP["Western Plateau and Hills Region"],
-            "rainfall_mm": ZONE_RAINFALL["Western Plateau and Hills Region"],
-            "soil_type": ZONE_SOIL["Western Plateau and Hills Region"],
-            "lat": 18.5204, "lng": 73.8567,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-        "380001": {
-            "zone": "Gujarat Plains and Hills Region",
-            "district": "Ahmedabad", "state": "Gujarat",
-            "suitable_crops": ZONE_CROP_MAP["Gujarat Plains and Hills Region"],
-            "rainfall_mm": ZONE_RAINFALL["Gujarat Plains and Hills Region"],
-            "soil_type": ZONE_SOIL["Gujarat Plains and Hills Region"],
-            "lat": 23.0225, "lng": 72.5714,
-            "source": "AIKosh — Ministry of Agriculture and Farmer Welfare",
-        },
-    }
-
-
-def build_aif_schemes(aif_rows: list[dict]) -> dict:
+def build_aif_schemes(aif_rows: list[dict]) -> tuple[dict, list]:
     """
-    Build agri_infra_schemes.json from AIKosh Agri Infra Fund data.
-    Groups schemes by state for quick eligibility lookup.
-    Returns: { state: [{ scheme_name, type, amount, beneficiary, status }] }
+    Build:
+      agri_infra_schemes.json  → state → summary (project types, beneficiary types, total amount)
+      aif_geo_projects.json    → list of geo-tagged project points for map overlay
+
+    Real columns: Project_State_Name, Project_District_Name, Project_Type,
+                  BeneficiaryType, Approved_Loan_Amount_AIF, Loan_Application_Status_Name,
+                  Project_Geo_Latitude, Project_Geo_Longitude, Project_Name,
+                  Scheme_Type, Category
     """
-    schemes_by_state = {}
+    schemes_by_state: dict = {}
+    geo_projects: list = []
 
     for row in aif_rows:
-        # AIKosh AIF column names — detect flexibly
-        state = (
-            row.get("State") or row.get("state") or
-            row.get("State Name") or row.get("StateName") or ""
-        )
-        scheme_type = (
-            row.get("Project Type") or row.get("Type") or
-            row.get("Facility Type") or row.get("FacilityType") or
-            row.get("Category") or "Infrastructure"
-        )
-        amount = (
-            row.get("Loan Amount") or row.get("Amount") or
-            row.get("Project Cost") or row.get("Sanctioned Amount") or ""
-        )
-        status = (
-            row.get("Status") or row.get("Project Status") or "Active"
-        )
-        district = (
-            row.get("District") or row.get("district") or ""
-        )
+        state    = str(row.get("Project_State_Name", "")).strip().title()
+        district = str(row.get("Project_District_Name", "")).strip().title()
+        proj_type = str(row.get("Project_Type", "")).strip()
+        benef_type = str(row.get("BeneficiaryType", "")).strip()
+        proj_name  = str(row.get("Project_Name", "")).strip()
+        status     = str(row.get("Loan_Application_Status_Name", "")).strip()
+        scheme     = str(row.get("Scheme_Type", "Agri Infra Fund")).strip()
+        category   = str(row.get("Category", "")).strip()
+
+        # Loan amount — convert to lakhs
+        raw_amount = str(row.get("Approved_Loan_Amount_AIF", "")).strip()
+        try:
+            amount_lakhs = round(float(raw_amount) / 100_000, 2) if raw_amount else None
+        except ValueError:
+            amount_lakhs = None
+
+        lat_raw = str(row.get("Project_Geo_Latitude", "")).strip()
+        lng_raw = str(row.get("Project_Geo_Longitude", "")).strip()
+        try:
+            lat = float(lat_raw) if lat_raw else None
+            lng = float(lng_raw) if lng_raw else None
+        except ValueError:
+            lat = lng = None
 
         if not state:
             continue
 
-        state = str(state).strip()
+        # ── Geo project point (for map) ─────────────────────────────────────
+        if lat and lng and proj_name:
+            geo_projects.append({
+                "name":         proj_name,
+                "type":         proj_type,
+                "beneficiary":  benef_type,
+                "state":        state,
+                "district":     district,
+                "status":       status,
+                "amount_lakhs": amount_lakhs,
+                "scheme":       scheme,
+                "lat":          lat,
+                "lng":          lng,
+            })
+
+        # ── State summary ────────────────────────────────────────────────────
         if state not in schemes_by_state:
-            schemes_by_state[state] = []
+            schemes_by_state[state] = {
+                "total_projects":    0,
+                "total_amount_lakhs": 0.0,
+                "project_types":     {},
+                "beneficiary_types": {},
+                "status_counts":     {},
+                "districts":         set(),
+                "source":            "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)",
+            }
 
-        schemes_by_state[state].append({
-            "type":      str(scheme_type).strip(),
-            "district":  str(district).strip(),
-            "amount":    str(amount).strip(),
-            "status":    str(status).strip(),
-        })
+        s = schemes_by_state[state]
+        s["total_projects"] += 1
+        if amount_lakhs:
+            s["total_amount_lakhs"] = round(s["total_amount_lakhs"] + amount_lakhs, 2)
+        if proj_type:
+            s["project_types"][proj_type] = s["project_types"].get(proj_type, 0) + 1
+        if benef_type:
+            s["beneficiary_types"][benef_type] = s["beneficiary_types"].get(benef_type, 0) + 1
+        if status:
+            s["status_counts"][status] = s["status_counts"].get(status, 0) + 1
+        if district:
+            s["districts"].add(district)
 
-    # Deduplicate and summarize by type per state
-    summary = {}
-    for state, rows in schemes_by_state.items():
-        type_counts = {}
-        for r in rows:
-            t = r["type"]
-            type_counts[t] = type_counts.get(t, 0) + 1
-
-        summary[state] = {
-            "total_projects": len(rows),
+    # Finalise: sort type dicts by count, convert sets to lists
+    final_schemes: dict = {}
+    for state, s in schemes_by_state.items():
+        final_schemes[state] = {
+            "total_projects":    s["total_projects"],
+            "total_amount_lakhs": s["total_amount_lakhs"],
             "project_types": [
                 {"type": t, "count": c}
-                for t, c in sorted(type_counts.items(), key=lambda x: -x[1])
+                for t, c in sorted(s["project_types"].items(), key=lambda x: -x[1])
             ],
-            "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture and Farmer Welfare)",
+            "beneficiary_types": [
+                {"type": t, "count": c}
+                for t, c in sorted(s["beneficiary_types"].items(), key=lambda x: -x[1])
+            ],
+            "status_counts": dict(sorted(s["status_counts"].items(), key=lambda x: -x[1])),
+            "districts_covered": sorted(s["districts"]),
+            "source": s["source"],
         }
 
-    return summary
+    return final_schemes, geo_projects
 
+
+# ── Pincode-compatible zone lookup (for /api/recommend-crop) ─────────────────
+
+# Maps existing 6-digit pincodes to district names (for zone lookup bridge)
+PINCODE_TO_DISTRICT: dict[str, str] = {
+    # Karnataka
+    "560001": "Bengaluru Urban|Karnataka",
+    "570001": "Mysuru|Karnataka",
+    "572101": "Tumakuru|Karnataka",
+    # Maharashtra
+    "400001": "Mumbai|Maharashtra",
+    "411001": "Pune|Maharashtra",
+    "440001": "Nagpur|Maharashtra",
+    "422001": "Nashik|Maharashtra",
+    "431001": "Aurangabad|Maharashtra",
+    # Delhi
+    "110001": "New Delhi|Delhi",
+    # Tamil Nadu
+    "600001": "Chennai|Tamil Nadu",
+    "641001": "Coimbatore|Tamil Nadu",
+    "625001": "Madurai|Tamil Nadu",
+    "636001": "Salem|Tamil Nadu",
+    # Telangana
+    "500001": "Hyderabad|Telangana",
+    "506001": "Warangal|Telangana",
+    "503001": "Nizamabad|Telangana",
+    # Rajasthan
+    "302001": "Jaipur|Rajasthan",
+    "342001": "Jodhpur|Rajasthan",
+    "313001": "Udaipur|Rajasthan",
+    "334001": "Bikaner|Rajasthan",
+    # Uttar Pradesh
+    "208001": "Kanpur Nagar|Uttar Pradesh",
+    "226001": "Lucknow|Uttar Pradesh",
+    "282001": "Agra|Uttar Pradesh",
+    "250001": "Meerut|Uttar Pradesh",
+    "221001": "Varanasi|Uttar Pradesh",
+    # West Bengal
+    "700001": "Kolkata|West Bengal",
+    "711101": "Howrah|West Bengal",
+    "713101": "Burdwan|West Bengal",
+    "732101": "Malda|West Bengal",
+    "734101": "Darjeeling|West Bengal",
+    # Gujarat
+    "380001": "Ahmedabad|Gujarat",
+    "395001": "Surat|Gujarat",
+    "360001": "Rajkot|Gujarat",
+    "390001": "Vadodara|Gujarat",
+    # Punjab
+    "141001": "Ludhiana|Punjab",
+    "143001": "Amritsar|Punjab",
+    # Haryana
+    "131001": "Sonipat|Haryana",
+    "125001": "Hisar|Haryana",
+    # Madhya Pradesh
+    "462001": "Bhopal|Madhya Pradesh",
+    "452001": "Indore|Madhya Pradesh",
+    "474001": "Gwalior|Madhya Pradesh",
+    "482001": "Jabalpur|Madhya Pradesh",
+    # Chhattisgarh
+    "492001": "Raipur|Chhattisgarh",
+    # Odisha
+    "751001": "Bhubaneswar|Odisha",
+    "753001": "Cuttack|Odisha",
+    # Jharkhand
+    "834001": "Ranchi|Jharkhand",
+    "826001": "Dhanbad|Jharkhand",
+    # Bihar
+    "800001": "Patna|Bihar",
+    "842001": "Muzaffarpur|Bihar",
+    # Assam
+    "786001": "Dibrugarh|Assam",
+    # Uttarakhand
+    "248001": "Dehradun|Uttarakhand",
+    "249401": "Haridwar|Uttarakhand",
+    "263001": "Nainital|Uttarakhand",
+    # Himachal Pradesh
+    "170001": "Shimla|Himachal Pradesh",
+    "176001": "Kangra|Himachal Pradesh",
+    "175101": "Kullu|Himachal Pradesh",
+    # Jammu & Kashmir
+    "190001": "Srinagar|Jammu And Kashmir",
+    "180001": "Jammu|Jammu And Kashmir",
+    # Ladakh
+    "194101": "Leh Ladakh|Ladakh",
+    "682001": "Ernakulam|Kerala",
+    "695001": "Thiruvananthapuram|Kerala",
+    "673001": "Kozhikode|Kerala",
+    "403501": "North Goa|Goa",
+    "403001": "South Goa|Goa",
+}
+
+
+def build_pincode_lookup(zone_lookup: dict) -> dict:
+    """
+    Convert the district-keyed zone_lookup to a pincode-keyed lookup
+    compatible with the existing /api/recommend-crop endpoint.
+    """
+    pincode_lookup: dict = {}
+    for pincode, district_state_key in PINCODE_TO_DISTRICT.items():
+        entry = zone_lookup.get(district_state_key)
+        if entry:
+            pincode_lookup[pincode] = entry
+    return pincode_lookup
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
     print()
-    print("╔══════════════════════════════════════════════╗")
-    print("║   FunctionalAgro — AIKosh Data Parser        ║")
-    print("╚══════════════════════════════════════════════╝")
+    print("╔══════════════════════════════════════════════════════════╗")
+    print("║   FunctionalAgro — AIKosh Data Parser (Real Datasets)   ║")
+    print("╚══════════════════════════════════════════════════════════╝")
     print()
 
-    # ── Check files exist ──────────────────────────────────────────────────────
+    # Check files exist
     missing = []
     if not os.path.exists(ZONE_FILE):
         missing.append(f"  ❌ {ZONE_FILE}")
@@ -390,52 +495,56 @@ def main():
         print("Missing input files:")
         for m in missing:
             print(m)
-        print()
-        print("Download them from AIKosh (requires free registration):")
-        print("  Zone data: https://aikosh.indiaai.gov.in/home/datasets/details/agro_climatic_zone_datasets.html")
-        print("  AIF data:  https://aikosh.indiaai.gov.in/home/datasets/details/agri_infra_fund_aif_dataset.html")
-        print()
-        print("Save as:")
-        print(f"  {ZONE_FILE}")
-        print(f"  {AIF_FILE}")
         sys.exit(1)
 
-    # ── Parse zone data ────────────────────────────────────────────────────────
-    print("📊 Parsing Agro Climatic Zone data...")
-    try:
-        zone_rows = parse_zone_xlsx()
-        zone_lookup = build_zone_lookup(zone_rows)
-    except Exception as e:
-        print(f"   ⚠️  Zone parse error: {e}. Using AIKosh-annotated fallback.")
-        zone_lookup = _hardcoded_fallback()
+    # ── Zone data ─────────────────────────────────────────────────────────────
+    print("📊 Parsing AIKosh Agro Climatic Zone Registry...")
+    zone_rows = _read_csv(ZONE_FILE)
+    print(f"   Total rows: {len(zone_rows)}")
+
+    zone_lookup    = build_zone_lookup(zone_rows)
+    pincode_lookup = build_pincode_lookup(zone_lookup)
 
     with open(OUT_ZONE, "w", encoding="utf-8") as f:
+        json.dump(pincode_lookup, f, indent=2, ensure_ascii=False)
+    print(f"   ✅ Wrote {len(pincode_lookup)} pincodes → {OUT_ZONE}")
+
+    # Also write the full district-level lookup for richer queries
+    district_out = os.path.join(OUT_DIR, "district_zone_lookup.json")
+    with open(district_out, "w", encoding="utf-8") as f:
         json.dump(zone_lookup, f, indent=2, ensure_ascii=False)
-    print(f"   ✅ Wrote {len(zone_lookup)} pincodes → {OUT_ZONE}")
+    print(f"   ✅ Wrote {len(zone_lookup)} districts → {district_out}")
 
-    # ── Parse AIF data ─────────────────────────────────────────────────────────
+    # ── AIF data ──────────────────────────────────────────────────────────────
     print()
-    print("📊 Parsing Agri Infra Fund data...")
-    try:
-        aif_rows = parse_aif_csv()
-        aif_summary = build_aif_schemes(aif_rows)
-    except Exception as e:
-        print(f"   ⚠️  AIF parse error: {e}. Skipping.")
-        aif_summary = {}
+    print("📊 Parsing AIKosh Agri Infra Fund Dataset...")
+    aif_rows = _read_csv(AIF_FILE)
+    print(f"   Total rows: {len(aif_rows)}")
 
-    if aif_summary:
-        with open(OUT_AIF, "w", encoding="utf-8") as f:
-            json.dump(aif_summary, f, indent=2, ensure_ascii=False)
-        print(f"   ✅ Wrote {len(aif_summary)} states → {OUT_AIF}")
+    aif_schemes, geo_projects = build_aif_schemes(aif_rows)
 
+    with open(OUT_AIF, "w", encoding="utf-8") as f:
+        json.dump(aif_schemes, f, indent=2, ensure_ascii=False)
+    print(f"   ✅ Wrote {len(aif_schemes)} states → {OUT_AIF}")
+
+    with open(OUT_AIF_GEO, "w", encoding="utf-8") as f:
+        json.dump(geo_projects, f, indent=2, ensure_ascii=False)
+    print(f"   ✅ Wrote {len(geo_projects)} geo-tagged projects → {OUT_AIF_GEO}")
+
+    # ── Summary ───────────────────────────────────────────────────────────────
+    print()
+    print("══════════════════════════════════════════════════════════")
+    print(f"  Zone registry   : {len(zone_rows)} district-zone rows parsed")
+    print(f"  Unique districts: {len(zone_lookup)} district-state pairs")
+    print(f"  Pincodes mapped : {len(pincode_lookup)}")
+    print(f"  AIF projects    : {len(aif_rows)} rows → {len(geo_projects)} geo-tagged")
+    print(f"  States with AIF : {len(aif_schemes)}")
+    print("══════════════════════════════════════════════════════════")
     print()
     print("✅ AIKosh data integration complete!")
     print()
-    print("Zone data now includes official AIKosh agro-climatic zones.")
-    print("The `source` field in pincode_zone_crops.json confirms real govt data.")
-    print()
-    print("Next: restart the backend to reload zone data.")
-    print("  uvicorn backend.main:app --reload --port 8000")
+    print("Next: restart the backend to reload data.")
+    print("  python -m uvicorn backend.main:app --reload --port 8000")
 
 
 if __name__ == "__main__":

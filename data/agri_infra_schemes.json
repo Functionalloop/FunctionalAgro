@@ -1,0 +1,835 @@
+{
+  "Haryana": {
+    "total_projects": 3,
+    "total_amount_lakhs": 600.0,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 2
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 2
+      },
+      {
+        "type": "Local Body sponsored Public-Private Partnership Project",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 3
+    },
+    "districts_covered": [
+      "Karnal",
+      "Sonipat"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Karnataka": {
+    "total_projects": 10,
+    "total_amount_lakhs": 859.5,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 5
+      },
+      {
+        "type": "Primary processing Center",
+        "count": 2
+      },
+      {
+        "type": "Organic inputs production",
+        "count": 1
+      },
+      {
+        "type": "Others",
+        "count": 1
+      },
+      {
+        "type": "Sorting & Grading Unit",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 6
+      },
+      {
+        "type": "Farmer",
+        "count": 3
+      },
+      {
+        "type": "Marketing Cooperative Society",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 9,
+      "Pending Information": 1
+    },
+    "districts_covered": [
+      "Bagalkote",
+      "Bengaluru Rural",
+      "Gadag",
+      "Haveri",
+      "Mysuru",
+      "Ramanagara",
+      "Tumakuru",
+      "Vijayapura"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Rajasthan": {
+    "total_projects": 7,
+    "total_amount_lakhs": 400.0,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 3
+      },
+      {
+        "type": "Custom Hiring Centre",
+        "count": 1
+      },
+      {
+        "type": "Sorting & Grading Unit",
+        "count": 1
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 1
+      },
+      {
+        "type": "Infrastructure for smart and precision agriculture",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Farmer",
+        "count": 4
+      },
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 3
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 3,
+      "Pending Information": 2,
+      "Verified by PMU": 2
+    },
+    "districts_covered": [
+      "Ajmer",
+      "Bikaner",
+      "Bundi",
+      "Nagaur",
+      "Tonk",
+      "Udaipur"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Tamil Nadu": {
+    "total_projects": 5,
+    "total_amount_lakhs": 107.08,
+    "project_types": [
+      {
+        "type": "Others",
+        "count": 1
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 1
+      },
+      {
+        "type": "Infrastructure for smart and precision agriculture",
+        "count": 1
+      },
+      {
+        "type": "Warehouse",
+        "count": 1
+      },
+      {
+        "type": "Primary processing Center",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 4
+      },
+      {
+        "type": "Agricultural Produce Market Committee (APMC)",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Pending Information": 2,
+      "Disbursed": 2,
+      "Verified by PMU": 1
+    },
+    "districts_covered": [
+      "Chennai",
+      "Dindigul",
+      "Erode",
+      "Namakkal",
+      "Tiruvannamalai"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Bihar": {
+    "total_projects": 4,
+    "total_amount_lakhs": 130.38,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 4
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Farmer",
+        "count": 3
+      },
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 4
+    },
+    "districts_covered": [
+      "Bhagalpur",
+      "Buxar",
+      "Vaishali"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Maharashtra": {
+    "total_projects": 24,
+    "total_amount_lakhs": 2351.26,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 8
+      },
+      {
+        "type": "Others",
+        "count": 7
+      },
+      {
+        "type": "Warehouse",
+        "count": 5
+      },
+      {
+        "type": "Composite Project",
+        "count": 1
+      },
+      {
+        "type": "Logistics Facility",
+        "count": 1
+      },
+      {
+        "type": "PHM Activities",
+        "count": 1
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 17
+      },
+      {
+        "type": "Startup",
+        "count": 4
+      },
+      {
+        "type": "Farmer",
+        "count": 2
+      },
+      {
+        "type": "Farmer Producers Organization",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 21,
+      "Pending Information": 3
+    },
+    "districts_covered": [
+      "Ahmednagar",
+      "Akola",
+      "Buldhana",
+      "Chhatrapati Sambhajinagar",
+      "Dharashiv",
+      "Jalgaon",
+      "Kolhapur",
+      "Latur",
+      "Nagpur",
+      "Nanded",
+      "Pune",
+      "Sangli",
+      "Satara",
+      "Solapur"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Telangana": {
+    "total_projects": 6,
+    "total_amount_lakhs": 422.43,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 5
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 6
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 5,
+      "Draft": 1
+    },
+    "districts_covered": [
+      "Khammam",
+      "Mancherial",
+      "Nalgonda",
+      "Narayanpet",
+      "Rajanna Sircilla",
+      "Ranga Reddy"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Chhattisgarh": {
+    "total_projects": 3,
+    "total_amount_lakhs": 335.0,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 1
+      },
+      {
+        "type": "Others",
+        "count": 1
+      },
+      {
+        "type": "Sorting & Grading Unit",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 3
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 2,
+      "Pending Information": 1
+    },
+    "districts_covered": [
+      "Balrampur Ramanujganj",
+      "Mahasamund"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Uttarakhand": {
+    "total_projects": 1,
+    "total_amount_lakhs": 192.5,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 1
+    },
+    "districts_covered": [
+      "Udam Singh Nagar"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Madhya Pradesh": {
+    "total_projects": 388,
+    "total_amount_lakhs": 24421.74,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 210
+      },
+      {
+        "type": "Custom Hiring Centre",
+        "count": 58
+      },
+      {
+        "type": "Primary processing Center",
+        "count": 48
+      },
+      {
+        "type": "Others",
+        "count": 46
+      },
+      {
+        "type": "Sorting & Grading Unit",
+        "count": 20
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 2
+      },
+      {
+        "type": "PHM Activities",
+        "count": 1
+      },
+      {
+        "type": "Composite Project",
+        "count": 1
+      },
+      {
+        "type": "Logistics Facility",
+        "count": 1
+      },
+      {
+        "type": "Infrastructure for smart and precision agriculture",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 274
+      },
+      {
+        "type": "Farmer",
+        "count": 103
+      },
+      {
+        "type": "Startup",
+        "count": 7
+      },
+      {
+        "type": "Joint Liability Groups",
+        "count": 2
+      },
+      {
+        "type": "Local Body sponsored Public-Private Partnership Project",
+        "count": 1
+      },
+      {
+        "type": "Farmer Producers Organization",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 381,
+      "Draft": 6,
+      "Pending Information": 1
+    },
+    "districts_covered": [
+      "Agar-Malwa",
+      "Alirajpur",
+      "Anuppur",
+      "Ashoknagar",
+      "Balaghat",
+      "Barwani",
+      "Betul",
+      "Bhopal",
+      "Burhanpur",
+      "Chhatarpur",
+      "Damoh",
+      "Datia",
+      "Dewas",
+      "Dhar",
+      "East Nimar",
+      "Guna",
+      "Gwalior",
+      "Harda",
+      "Indore",
+      "Jabalpur",
+      "Jhabua",
+      "Khargone",
+      "Mandsaur",
+      "Morena",
+      "Narmadapuram",
+      "Narsinghpur",
+      "Neemuch",
+      "Niwari",
+      "Panna",
+      "Raisen",
+      "Rajgarh",
+      "Ratlam",
+      "Sagar",
+      "Satna",
+      "Sehore",
+      "Shahdol",
+      "Shajapur",
+      "Sheopur",
+      "Shivpuri",
+      "Tikamgarh",
+      "Ujjain",
+      "Vidisha"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Uttar Pradesh": {
+    "total_projects": 7,
+    "total_amount_lakhs": 591.45,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 3
+      },
+      {
+        "type": "Warehouse",
+        "count": 3
+      },
+      {
+        "type": "Custom Hiring Centre",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 5
+      },
+      {
+        "type": "Farmer",
+        "count": 1
+      },
+      {
+        "type": "Farmer Producers Organization",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 7
+    },
+    "districts_covered": [
+      "Amethi",
+      "Azamgarh",
+      "Bulandshahr",
+      "Deoria",
+      "Fatehpur",
+      "Pilibhit",
+      "Sambhal"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Gujarat": {
+    "total_projects": 7,
+    "total_amount_lakhs": 557.7,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 4
+      },
+      {
+        "type": "Others",
+        "count": 2
+      },
+      {
+        "type": "Infrastructure for smart and precision agriculture",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 5
+      },
+      {
+        "type": "Startup",
+        "count": 2
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 7
+    },
+    "districts_covered": [
+      "Arvalli",
+      "Morbi",
+      "Surat",
+      "Valsad"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Odisha": {
+    "total_projects": 2,
+    "total_amount_lakhs": 48.99,
+    "project_types": [
+      {
+        "type": "Infrastructure for smart and precision agriculture",
+        "count": 1
+      },
+      {
+        "type": "Others",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 2
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 2
+    },
+    "districts_covered": [
+      "Kalahandi",
+      "Khordha"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Andhra Pradesh": {
+    "total_projects": 1,
+    "total_amount_lakhs": 50.0,
+    "project_types": [
+      {
+        "type": "Others",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Central sponsored Public-Private Partnership Project",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 1
+    },
+    "districts_covered": [
+      "Vizianagaram"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "West Bengal": {
+    "total_projects": 22,
+    "total_amount_lakhs": 1195.5,
+    "project_types": [
+      {
+        "type": "Others",
+        "count": 7
+      },
+      {
+        "type": "Warehouse",
+        "count": 5
+      },
+      {
+        "type": "Custom Hiring Centre",
+        "count": 2
+      },
+      {
+        "type": "Sorting & Grading Unit",
+        "count": 2
+      },
+      {
+        "type": "Primary processing Center",
+        "count": 2
+      },
+      {
+        "type": "Packaging units",
+        "count": 1
+      },
+      {
+        "type": "Cold Stores and Cold Chain",
+        "count": 1
+      },
+      {
+        "type": "PPP projects promoted by Local Govts. or their age",
+        "count": 1
+      },
+      {
+        "type": "Composite Project",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 10
+      },
+      {
+        "type": "Farmer",
+        "count": 8
+      },
+      {
+        "type": "Startup",
+        "count": 2
+      },
+      {
+        "type": "Primary Agricultural Credit Society",
+        "count": 1
+      },
+      {
+        "type": "Joint Liability Groups",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 21,
+      "Pending Information": 1
+    },
+    "districts_covered": [
+      "Birbhum",
+      "Dakshin Dinajpur",
+      "Howrah",
+      "Jalpaiguri",
+      "Jhargram",
+      "Murshidabad",
+      "North 24 Parganas",
+      "Paschim Medinipur",
+      "Purba Bardhaman",
+      "Purba Medinipur",
+      "Purulia",
+      "South 24 Parganas"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Kerala": {
+    "total_projects": 3,
+    "total_amount_lakhs": 128.75,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 2
+      },
+      {
+        "type": "Infrastructure for smart and precision agriculture",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 2
+      },
+      {
+        "type": "Farmer Producers Organization",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 3
+    },
+    "districts_covered": [
+      "Idukki",
+      "Kannur",
+      "Kollam"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Punjab": {
+    "total_projects": 4,
+    "total_amount_lakhs": 55.25,
+    "project_types": [
+      {
+        "type": "Custom Hiring Centre",
+        "count": 3
+      },
+      {
+        "type": "Primary processing Center",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Farmer",
+        "count": 2
+      },
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 1
+      },
+      {
+        "type": "Farmer Producers Organization",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 3,
+      "Draft": 1
+    },
+    "districts_covered": [
+      "Fazilka",
+      "Jalandhar",
+      "Pathankot"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Delhi": {
+    "total_projects": 1,
+    "total_amount_lakhs": 200.0,
+    "project_types": [
+      {
+        "type": "Warehouse",
+        "count": 1
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 1
+      }
+    ],
+    "status_counts": {
+      "Approved": 1
+    },
+    "districts_covered": [
+      "North West"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  },
+  "Assam": {
+    "total_projects": 2,
+    "total_amount_lakhs": 26.4,
+    "project_types": [
+      {
+        "type": "Primary processing Center",
+        "count": 2
+      }
+    ],
+    "beneficiary_types": [
+      {
+        "type": "Agri-Entrepreneur",
+        "count": 2
+      }
+    ],
+    "status_counts": {
+      "Disbursed": 2
+    },
+    "districts_covered": [
+      "Nagaon"
+    ],
+    "source": "AIKosh — Agri Infra Fund (Ministry of Agriculture & Farmers Welfare, GoI)"
+  }
+}

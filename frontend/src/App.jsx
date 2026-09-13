@@ -7,6 +7,7 @@ import MapPanel       from './components/MapPanel'
 import Hero           from './components/Hero'
 import BentoGrid      from './components/BentoGrid'
 import FarmerView     from './components/FarmerView'
+import ProfitCalc     from './components/ProfitCalc'
 import { auth, provider } from './firebase'
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
 
@@ -52,7 +53,7 @@ export default function App() {
       setScrollMax(maxScroll)
 
       // Detect which section is active in the viewport
-      const sections = ['overview', 'diagnose', 'farmer', 'radar', 'dalal']
+      const sections = ['overview', 'diagnose', 'farmer', 'radar', 'dalal', 'profit']
       const viewportMid = currentScroll + window.innerHeight / 3
       for (const section of sections) {
         const el = document.getElementById(section)
@@ -172,6 +173,12 @@ export default function App() {
             onClick={() => document.getElementById('dalal')?.scrollIntoView({ behavior: 'smooth' })}
           >
             AI Dalal
+          </button>
+          <button 
+            className={activeSection === 'profit' ? 'active' : ''} 
+            onClick={() => document.getElementById('profit')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Profit Calc
           </button>
         </div>
         
@@ -333,6 +340,18 @@ export default function App() {
           <div>
             <DalalChat diagnosisResult={result} />
           </div>
+        </section>
+
+        {/* 6. Profit Calculator + WhatsApp Bot Section */}
+        <section id="profit" className="section-scroll">
+          <div className="section-header-styled">
+            <h2>06 / MSP vs Dalal Profit Calculator</h2>
+            <div className="section-line"></div>
+          </div>
+          <div className="text-muted" style={{ marginBottom: 16, fontSize: 14 }}>
+            Compare Government MSP vs AI Dalal vs open market — see which selling channel gives you the highest net profit per acre.
+          </div>
+          <ProfitCalc />
         </section>
 
       </main>

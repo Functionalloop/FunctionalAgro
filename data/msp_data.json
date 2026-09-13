@@ -1,0 +1,105 @@
+{
+  "_source": "CACP — Commission for Agricultural Costs & Prices, Government of India (KMS 2024-25 / RMS 2025-26)",
+  "_note": "MSP = Minimum Support Price per quintal (100 kg). Non-MSP crops have null msp_price.",
+
+  "Wheat": {
+    "msp_price": 2275,
+    "msp_season": "RMS 2025-26",
+    "input_cost_per_quintal": 1250,
+    "default_yield_per_acre": 17,
+    "yield_range": [14, 22],
+    "unit": "quintal",
+    "has_msp": true,
+    "procurement_note": "FCI / State agencies procure at MSP"
+  },
+  "Rice": {
+    "msp_price": 2300,
+    "msp_season": "KMS 2024-25",
+    "input_cost_per_quintal": 1450,
+    "default_yield_per_acre": 18,
+    "yield_range": [14, 24],
+    "unit": "quintal",
+    "has_msp": true,
+    "procurement_note": "FCI / NAFED procure at MSP during procurement season"
+  },
+  "Maize": {
+    "msp_price": 2090,
+    "msp_season": "KMS 2024-25",
+    "input_cost_per_quintal": 1050,
+    "default_yield_per_acre": 14,
+    "yield_range": [10, 20],
+    "unit": "quintal",
+    "has_msp": true,
+    "procurement_note": "NAFED / State agencies"
+  },
+  "Cotton": {
+    "msp_price": 7121,
+    "msp_season": "KMS 2024-25",
+    "input_cost_per_quintal": 4200,
+    "default_yield_per_acre": 7,
+    "yield_range": [5, 10],
+    "unit": "quintal",
+    "has_msp": true,
+    "procurement_note": "CCI (Cotton Corporation of India) procures at MSP"
+  },
+  "Soybean": {
+    "msp_price": 4892,
+    "msp_season": "KMS 2024-25",
+    "input_cost_per_quintal": 2800,
+    "default_yield_per_acre": 10,
+    "yield_range": [7, 14],
+    "unit": "quintal",
+    "has_msp": true,
+    "procurement_note": "NAFED / NCCF"
+  },
+  "Groundnut": {
+    "msp_price": 6783,
+    "msp_season": "KMS 2024-25",
+    "input_cost_per_quintal": 4100,
+    "default_yield_per_acre": 10,
+    "yield_range": [7, 14],
+    "unit": "quintal",
+    "has_msp": true,
+    "procurement_note": "NAFED at MSP"
+  },
+  "Tomato": {
+    "msp_price": null,
+    "msp_season": null,
+    "input_cost_per_quintal": 600,
+    "default_yield_per_acre": 120,
+    "yield_range": [80, 160],
+    "unit": "quintal",
+    "has_msp": false,
+    "procurement_note": "No MSP. Price Stabilisation Fund (PSF) may intervene at extreme lows."
+  },
+  "Potato": {
+    "msp_price": null,
+    "msp_season": null,
+    "input_cost_per_quintal": 400,
+    "default_yield_per_acre": 90,
+    "yield_range": [60, 120],
+    "unit": "quintal",
+    "has_msp": false,
+    "procurement_note": "No MSP. NAFED cold-storage procurement in select states."
+  },
+  "Onion": {
+    "msp_price": null,
+    "msp_season": null,
+    "input_cost_per_quintal": 350,
+    "default_yield_per_acre": 70,
+    "yield_range": [50, 100],
+    "unit": "quintal",
+    "has_msp": false,
+    "procurement_note": "No MSP. Price Stabilisation Fund buffer stock."
+  },
+  "Chilli": {
+    "msp_price": null,
+    "msp_season": null,
+    "input_cost_per_quintal": 2200,
+    "default_yield_per_acre": 25,
+    "yield_range": [15, 35],
+    "unit": "quintal",
+    "has_msp": false,
+    "procurement_note": "No MSP. Spices Board India support in some seasons."
+  }
+}

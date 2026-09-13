@@ -22,7 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.database import init_db
-from backend.routes import diagnose, recommend, advise, outbreak, dalal, farmer_input, live_prices, alerts
+from backend.routes import diagnose, recommend, advise, outbreak, dalal, farmer_input, live_prices, alerts, aif_map, profit_calc
 import asyncio
 from backend.tasks.price_monitor import monitor_prices_loop
 
@@ -55,6 +55,8 @@ app.include_router(dalal.router,         prefix="/api", tags=["AI Dalal"])
 app.include_router(farmer_input.router,  prefix="/api", tags=["Farmer Input"])
 app.include_router(live_prices.router,   prefix="/api", tags=["Live Prices"])
 app.include_router(alerts.router,        prefix="/api", tags=["Alerts"])
+app.include_router(aif_map.router,       prefix="/api", tags=["Agri Infra Fund"])
+app.include_router(profit_calc.router,   prefix="/api", tags=["Profit Calculator"])
 
 
 def _configure_gemini():
@@ -109,5 +111,10 @@ def root():
             "GET  /api/live-prices",
             "GET  /api/live-prices/refresh",
             "GET  /api/live-prices/summary",
+            "GET  /api/aif-map",
+            "GET  /api/aif-summary",
+            "GET  /api/recommend-crop?pincode=...",
+            "GET  /api/recommend-crop?district=...&state=...",
+            "POST /api/profit-calc",
         ],
     }

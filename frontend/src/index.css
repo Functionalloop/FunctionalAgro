@@ -1813,3 +1813,20 @@ body {
   .wa-phone-frame { width: 100%; max-width: 400px; margin: 0 auto; }
 }
 
+/* ── ProfitCalc & WhatsApp Bot Animations ──────────────────────────────────── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+
