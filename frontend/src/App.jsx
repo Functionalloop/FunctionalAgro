@@ -9,151 +9,296 @@ import BentoGrid      from './components/BentoGrid'
 import FarmerView     from './components/FarmerView'
 import ProfitCalc     from './components/ProfitCalc'
 import { auth, provider } from './firebase'
-import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
+import { signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from 'firebase/auth'
 
 const IS_DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true'
 
-const NAV_ITEMS = [
-  { id: 'overview',  label: 'Overview' },
-  { id: 'diagnose',  label: 'Diagnose' },
-  { id: 'farmer',    label: 'Farmer View' },
-  { id: 'radar',     label: 'Outbreak Radar' },
-  { id: 'dalal',     label: 'AI Dalal' },
-  { id: 'profit',    label: 'Profit Calculator' },
-]
-
 export default function App() {
   const [activeSection, setActiveSection] = useState('overview')
+  const [scrollY, setScrollY]             = useState(0)
+  const [scrollMax, setScrollMax]         = useState(1)
   const [result, setResult]               = useState(null)
   const [outbreak, setOutbreak]           = useState(null)
   const [user, setUser]                   = useState(null)
+  const [loginError, setLoginError]       = useState(null)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser)
     })
+    // Handle redirect result (for mobile/popup-blocked fallback)
+    getRedirectResult(auth).then(result => {
+      if (result?.user) setUser(result.user)
+    }).catch(err => {
+      console.error('Redirect login error:', err)
+    })
     return () => unsubscribe()
   }, [])
 
   const handleSignIn = async () => {
-    try { await signInWithPopup(auth, provider) } catch (e) { console.error(e) }
+    setLoginError(null)
+    try {
+      await signInWithPopup(auth, provider)
+    } catch (error) {
+      console.error("Error signing in with Google:", error.code, error.message)
+      // If popup is blocked or not allowed, fall back to redirect
+      if (
+        error.code === 'auth/popup-blocked' ||
+        error.code === 'auth/popup-cancelled' ||
+        error.code === 'auth/cancelled-popup-request'
+      ) {
+        try {
+          await signInWithRedirect(auth, provider)
+        } catch (redirectErr) {
+          console.error("Redirect login also failed:", redirectErr)
+          setLoginError(`Login failed: ${redirectErr.message}`)
+        }
+      } else if (error.code === 'auth/unauthorized-domain') {
+        setLoginError(`Login failed: This domain is not authorized in Firebase. Please add it to Firebase Console → Authentication → Authorized Domains.`)
+      } else {
+        setLoginError(`Login failed: ${error.message}`)
+      }
+    }
   }
 
   const handleSignOut = async () => {
-    try { await signOut(auth) } catch (e) { console.error(e) }
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error("Error signing out", error)
+    }
   }
 
-  // Track active section on scroll
+
   useEffect(() => {
     const handleScroll = () => {
-      const viewportMid = window.scrollY + window.innerHeight / 3
-      for (const { id } of NAV_ITEMS) {
-        const el = document.getElementById(id)
+      const currentScroll = window.scrollY
+      setScrollY(currentScroll)
+
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+      setScrollMax(maxScroll)
+
+      // Detect which section is active in the viewport
+      const sections = ['overview', 'diagnose', 'farmer', 'radar', 'dalal', 'profit']
+      const viewportMid = currentScroll + window.innerHeight / 3
+      for (const section of sections) {
+        const el = document.getElementById(section)
         if (el) {
           const top = el.offsetTop
           const height = el.offsetHeight
           if (viewportMid >= top && viewportMid < top + height) {
-            setActiveSection(id)
+            setActiveSection(section)
             break
           }
         }
       }
     }
+
+    setScrollMax(Math.max(1, document.documentElement.scrollHeight - window.innerHeight))
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-  }
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible')
+        } else {
+          entry.target.classList.remove('visible')
+        }
+      })
+    }, observerOptions)
+
+    const sections = document.querySelectorAll('.section-scroll')
+    sections.forEach((sec) => observer.observe(sec))
+
+    return () => {
+      sections.forEach((sec) => observer.unobserve(sec))
+    }
+  }, [])
+
+  // Calculate dynamic blur (0px to 20px) and crazy transition filters on scroll
+  const scrollRatio = Math.max(0, Math.min(1, scrollY / (scrollMax || 1)))
+  const blurVal = scrollRatio * 20
+  const scaleVal = 1.0 + (scrollRatio * 0.15)
+  const hueVal = scrollRatio * 180
+  const saturateVal = 100 + (scrollRatio * 120)
+  const brightnessVal = 100 - (scrollRatio * 55)
 
   return (
-    <div>
-      {/* ── Top Navigation ──────────────────────────────────────── */}
-      <header className="top-nav">
-        <button className="nav-brand" onClick={() => scrollTo('overview')}>
-          <div className="nav-brand-mark">🌾</div>
-          <div>
-            <span className="nav-brand-name">FunctionalAgro</span>
-            <span className="nav-brand-tagline">Smart farming platform</span>
-          </div>
+    <div className="app-container">
+      {/* Background Graphics Wrapper containing video, blurred, hue-shifted and scaled dynamically */}
+      <div 
+        className="bg-graphics-wrapper"
+        style={{
+          filter: `blur(${blurVal}px) hue-rotate(${hueVal}deg) saturate(${saturateVal}%) brightness(${brightnessVal}%)`,
+          transform: `scale(${scaleVal})`,
+          position: 'fixed',
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: 'none',
+          transition: 'filter 0.05s ease-out, transform 0.05s ease-out'
+        }}
+      >
+        <div className="bg-video-container">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="bg-video"
+            src="/66810-520427372_medium.mp4"
+          />
+          <div className="bg-overlay" />
+        </div>
+      </div>
+
+      {/* Floating Center-Top Pill Navigation */}
+      <header className="floating-nav">
+        <button 
+          className="nav-brand-minimal" 
+          onClick={() => document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' })}
+          style={{ cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}
+        >
+          <span>🌾</span> FUNCTIONALAGRO
         </button>
-
-        <nav className="nav-links">
-          {NAV_ITEMS.map(({ id, label }) => (
-            <button
-              key={id}
-              className={`nav-link${activeSection === id ? ' active' : ''}`}
-              onClick={() => scrollTo(id)}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-
-        <div className="nav-auth">
+        <div className="nav-links-minimal">
+          <button 
+            className={activeSection === 'overview' ? 'active' : ''} 
+            onClick={() => document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Overview
+          </button>
+          <button 
+            className={activeSection === 'diagnose' ? 'active' : ''} 
+            onClick={() => document.getElementById('diagnose')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Diagnostics
+          </button>
+          <button 
+            className={activeSection === 'farmer' ? 'active' : ''} 
+            onClick={() => document.getElementById('farmer')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Farmer View
+          </button>
+          <button 
+            className={activeSection === 'radar' ? 'active' : ''} 
+            onClick={() => document.getElementById('radar')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Radar
+          </button>
+          <button 
+            className={activeSection === 'dalal' ? 'active' : ''} 
+            onClick={() => document.getElementById('dalal')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            AI Dalal
+          </button>
+          <button 
+            className={activeSection === 'profit' ? 'active' : ''} 
+            onClick={() => document.getElementById('profit')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Profit Calc
+          </button>
+        </div>
+        
+        {/* Firebase Auth Area */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', borderLeft: '1px solid rgba(255,255,255,0.1)', paddingLeft: '16px', marginLeft: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {user ? (
-            <>
-              {user.photoURL && (
-                <img src={user.photoURL} alt="Profile" className="nav-user-avatar" />
-              )}
-              <span className="nav-user-name">{user.displayName?.split(' ')[0]}</span>
-              <button className="btn btn-sm btn-danger" onClick={handleSignOut}>Sign out</button>
-            </>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {user.photoURL && <img src={user.photoURL} alt="Profile" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
+              <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>{user.displayName?.split(' ')[0] || 'User'}</span>
+              <button onClick={handleSignOut} style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--red-400)', padding: '4px 10px', fontSize: '9px', fontWeight: 800, borderRadius: '20px', cursor: 'pointer', textTransform: 'uppercase' }}>Log Out</button>
+            </div>
           ) : (
-            <button className="btn btn-sm btn-secondary" onClick={handleSignIn} id="login-btn">
-              Sign in with Google
+            <button onClick={handleSignIn} style={{ background: 'rgba(57, 255, 20, 0.1)', border: '1px solid rgba(57, 255, 20, 0.3)', color: 'var(--green-500)', padding: '4px 10px', fontSize: '9px', fontWeight: 800, borderRadius: '20px', cursor: 'pointer', textTransform: 'uppercase' }}>
+              🔑 Google Login
             </button>
+          )}
+          </div>
+          {loginError && (
+            <div style={{ fontSize: '9px', color: '#ef4444', maxWidth: '220px', textAlign: 'right', lineHeight: 1.3, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '6px', padding: '3px 7px' }}>
+              {loginError}
+            </div>
           )}
         </div>
       </header>
 
-      {/* ── Fixed Outbreak Alert ─────────────────────────────────── */}
+      {/* Fixed Outbreak Alert Banner */}
       {outbreak?.outbreak && <OutbreakBanner outbreak={outbreak} />}
 
-      {/* ── Main Content ─────────────────────────────────────────── */}
-      <div className="app-wrapper">
-
+      {/* Spacious View Area */}
+      <main className="view-content-wrapper">
+        
+        {/* Demo Mode Ribbon */}
         {IS_DEMO_MODE && (
-          <div className="demo-ribbon">
-            🔒 <strong>Demo mode</strong> — LLM calls bypassed via seed files
+          <div style={{
+            background: 'rgba(250, 204, 21, 0.06)',
+            border: '1px solid rgba(250, 204, 21, 0.2)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '10px 16px',
+            marginBottom: 28,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            fontSize: 12,
+            color: 'var(--amber-400)',
+            backdropFilter: 'blur(6px)',
+            width: 'fit-content',
+            position: 'relative',
+            zIndex: 15
+          }}>
+            <span>🔒</span>
+            <strong>DEMO MODE ACTIVE</strong>
+            <span style={{ color: 'var(--text-secondary)' }}>
+              — Bypassing LLM requests via seed files.
+            </span>
           </div>
         )}
 
-        {/* 1. Overview */}
-        <section id="overview">
-          <Hero
-            onStartDiagnose={() => scrollTo('diagnose')}
-            onStartDalal={() => scrollTo('dalal')}
+        {/* 1. Overview Section */}
+        <section id="overview" className="section-scroll">
+          <Hero 
+            onStartDiagnose={() => document.getElementById('diagnose')?.scrollIntoView({ behavior: 'smooth' })}
+            onStartDalal={() => document.getElementById('dalal')?.scrollIntoView({ behavior: 'smooth' })}
           />
-          <div className="section-divider" />
           <BentoGrid onSelectTab={(tabId) => {
-            const target = tabId === 'diagnose' ? 'diagnose' : tabId === 'dalal' ? 'dalal' : 'radar'
-            scrollTo(target)
+            const targetId = tabId === 'diagnose' ? 'diagnose' : tabId === 'dalal' ? 'dalal' : 'radar';
+            document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
           }} />
         </section>
 
-        {/* 2. Diagnose */}
-        <section id="diagnose" className="page-section">
-          <div className="section-eyebrow">Crop Health</div>
-          <h2 className="section-heading">Diagnose your plants</h2>
-          <p className="section-subheading">
-            Upload a photo of your crop leaf. Our edge AI classifies disease on-device — no internet needed for the initial scan.
-          </p>
+        {/* 2. Diagnose Section */}
+        <section id="diagnose" className="section-scroll">
+          <div className="section-header-styled">
+            <h2>02 / Crop Diagnostics Scanner</h2>
+            <div className="section-line"></div>
+          </div>
           <div className="grid-2">
             <DiagnosePanel
               onDiagnosed={setResult}
               onOutbreakUpdate={setOutbreak}
             />
+
             <div>
               {!result ? (
-                <div className="panel empty-state" style={{ minHeight: 320 }}>
-                  <span className="empty-state-icon">🌿</span>
-                  <h3 className="empty-state-title">Awaiting scan</h3>
-                  <p className="empty-state-body">
-                    Upload a crop photograph to begin analysis. Detects 38 disease classes with Hindi, Tamil and other language audio advisory.
+                <div className="glass-panel" style={{ textAlign: 'center', padding: '60px 30px', minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div style={{ fontSize: 48, marginBottom: 16, animation: 'float 3.5s ease-in-out infinite' }}>🌿</div>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>
+                    Edge AI Health Scanner
+                  </h3>
+                  <p className="text-muted" style={{ lineHeight: 1.6, marginBottom: 20 }}>
+                    Upload a photograph of your plants above to begin analysis locally on your device (no internet required). Our classifier detects 38 crop disease classes 
+                    and queries zone recommendations and Hindi/Tamil audio advisory.
                   </p>
-                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center', marginTop: 4 }}>
+                  <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <span className="badge">TensorFlow.js Edge</span>
                     <span className="badge">10 Languages</span>
                     <span className="badge">AIKosh Zone Data</span>
@@ -165,28 +310,28 @@ export default function App() {
             </div>
           </div>
 
+          {/* Suggested Sell CTA */}
           {result && !result.diagnosis.is_healthy && (
-            <div className="panel" style={{
-              marginTop: 20,
-              padding: '18px 24px',
+            <div className="glass-panel" style={{
+              marginTop: 24,
+              padding: '20px 24px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               gap: 16,
-              borderColor: 'rgba(192,57,43,0.3)',
-              background: 'var(--alert-pale)'
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              background: 'rgba(239, 68, 68, 0.03)'
             }}>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--alert)', marginBottom: 4 }}>
-                  Disease detected — sell before it spreads?
-                </div>
-                <div className="text-muted">Check live market rates on AI Dalal before the infection impacts your crop value.</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--red-400)' }}>💰 Crop Disease Detected! Sell now?</div>
+                <div className="text-muted" style={{ fontSize: 12 }}>Check AI Dalal marketplace prices before infection impacts crop valuations next week.</div>
               </div>
               <button
                 className="btn btn-secondary"
-                onClick={() => scrollTo('dalal')}
+                onClick={() => document.getElementById('dalal')?.scrollIntoView({ behavior: 'smooth' })}
                 id="go-to-dalal-btn"
+                style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', borderRadius: '8px', cursor: 'pointer' }}
               >
                 Open AI Dalal →
               </button>
@@ -194,47 +339,55 @@ export default function App() {
           )}
         </section>
 
-        {/* 3. Farmer View */}
-        <section id="farmer" className="page-section">
-          <div className="section-eyebrow">Field Interface</div>
-          <h2 className="section-heading">Farmer's mobile view</h2>
-          <p className="section-subheading">
-            Simulates the low-bandwidth WhatsApp interface delivered directly to farmers on feature phones.
-          </p>
-          <FarmerView diagnosisResult={result} />
+        {/* 3. Farmer View Section */}
+        <section id="farmer" className="section-scroll">
+          <div className="section-header-styled">
+            <h2>03 / Mobile Farmer View</h2>
+            <div className="section-line"></div>
+          </div>
+          <div>
+            <div className="text-muted" style={{ marginBottom: 16, fontSize: 14 }}>
+              This simulates the low-bandwidth SMS/WhatsApp view delivered directly to farmers' feature phones.
+            </div>
+            <FarmerView diagnosisResult={result} />
+          </div>
         </section>
 
-        {/* 4. Outbreak Radar */}
-        <section id="radar" className="page-section">
-          <div className="section-eyebrow">Disease Surveillance</div>
-          <h2 className="section-heading">Outbreak radar</h2>
-          <p className="section-subheading">
-            Anonymous, crowdsourced disease tracking. When cases cluster in a region, local farmers get an alert.
-          </p>
-          <MapPanel />
+        {/* 4. Outbreak Radar Section */}
+        <section id="radar" className="section-scroll">
+          <div className="section-header-styled">
+            <h2>04 / Outbreak Radar Tracking</h2>
+            <div className="section-line"></div>
+          </div>
+          <div>
+            <MapPanel />
+          </div>
         </section>
 
-        {/* 5. AI Dalal */}
-        <section id="dalal" className="page-section">
-          <div className="section-eyebrow">Price Negotiation</div>
-          <h2 className="section-heading">Negotiate with AI Dalal</h2>
-          <p className="section-subheading">
-            Three competing traders bid for your crop in real time, anchored against live Agmarknet government prices.
-          </p>
-          <DalalChat diagnosisResult={result} />
+        {/* 5. AI Dalal Section */}
+        <section id="dalal" className="section-scroll">
+          <div className="section-header-styled">
+            <h2>05 / AI Dalal Bidding Hub</h2>
+            <div className="section-line"></div>
+          </div>
+          <div>
+            <DalalChat diagnosisResult={result} />
+          </div>
         </section>
 
-        {/* 6. Profit Calculator */}
-        <section id="profit" className="page-section">
-          <div className="section-eyebrow">Financial Planning</div>
-          <h2 className="section-heading">MSP vs market profit</h2>
-          <p className="section-subheading">
-            Compare Government MSP vs AI Dalal vs open market to find which channel gives you the highest net profit per acre.
-          </p>
+        {/* 6. Profit Calculator + WhatsApp Bot Section */}
+        <section id="profit" className="section-scroll">
+          <div className="section-header-styled">
+            <h2>06 / MSP vs Dalal Profit Calculator</h2>
+            <div className="section-line"></div>
+          </div>
+          <div className="text-muted" style={{ marginBottom: 16, fontSize: 14 }}>
+            Compare Government MSP vs AI Dalal vs open market — see which selling channel gives you the highest net profit per acre.
+          </div>
           <ProfitCalc />
         </section>
 
-      </div>
+      </main>
     </div>
   )
 }

@@ -1,72 +1,54 @@
 export default function Hero({ onStartDiagnose, onStartDalal }) {
   return (
-    <div className="hero">
+    <section className="hero">
       <div className="hero-content">
-        <div className="hero-kicker">
-          <span className="hero-kicker-dot" />
-          Built on Government Infrastructure
+        <div className="hero-pill">
+          <span>🌱</span> Next-Gen Smart Farming
         </div>
-        <h1 className="hero-title">
-          Better farming.<br />
-          <em>Better prices.</em>
-        </h1>
-        <p className="hero-body">
-          FunctionalAgro uses AIKosh, Bhashini, and Agmarknet — real government data —
-          backed by Gemini AI to help you diagnose plant disease, track local outbreaks,
-          and negotiate your crop price in 10+ Indian languages.
+        <h2 className="hero-title">
+          Cool Farming.<br />
+          Smart Yield.<br />
+          Best Price.
+        </h2>
+        <p className="hero-subtitle">
+          FunctionalAgro uses real government infrastructure (AIKosh, Bhashini, and Agmarknet) 
+          backed by Google Gemini to help you diagnose plant diseases instantly, track local 
+          outbreaks in real time, and negotiate crop prices with buyers.
         </p>
-        <div className="hero-actions">
-          <button
-            className="btn btn-primary"
+
+        <div className="hero-ctas">
+          <button 
+            className="btn btn-primary" 
             onClick={onStartDiagnose}
             id="hero-diagnose-cta"
           >
-            📸 Scan a crop
+            📸 Diagnose Crop
           </button>
-          <button
-            className="btn btn-secondary"
+          <button 
+            className="btn btn-secondary" 
             onClick={onStartDalal}
             id="hero-dalal-cta"
           >
-            Get a price quote
+            🤝 Get Best Price
           </button>
         </div>
-      </div>
 
-      <div className="hero-visual">
-        <div className="hero-visual-stat">
-          <div className="hero-visual-icon icon-leaf">🌿</div>
-          <div>
-            <div className="hero-visual-label">Disease Classes</div>
-            <div className="hero-visual-value">38</div>
-            <div className="hero-visual-sub">Crop diseases detected on-device</div>
+        <div className="hero-stats">
+          <div className="hero-stat-card">
+            <div className="hero-stat-val">38</div>
+            <div className="hero-stat-lbl">Disease Classes</div>
           </div>
-        </div>
-        <div className="hero-visual-stat">
-          <div className="hero-visual-icon icon-chart">📊</div>
-          <div>
-            <div className="hero-visual-label">Live Prices</div>
-            <div className="hero-visual-value">Agmarknet</div>
-            <div className="hero-visual-sub">Real-time government mandi data</div>
+          <div className="hero-stat-card">
+            <div className="hero-stat-val">10+</div>
+            <div className="hero-stat-lbl">Indian Languages</div>
           </div>
-        </div>
-        <div className="hero-visual-stat">
-          <div className="hero-visual-icon icon-terra">🗣️</div>
-          <div>
-            <div className="hero-visual-label">Languages</div>
-            <div className="hero-visual-value">10+</div>
-            <div className="hero-visual-sub">Hindi, Tamil, Telugu, Kannada &amp; more</div>
-          </div>
-        </div>
-        <div className="hero-visual-stat">
-          <div className="hero-visual-icon icon-alert">🚨</div>
-          <div>
-            <div className="hero-visual-label">Outbreak Radar</div>
-            <div className="hero-visual-value">Live</div>
-            <div className="hero-visual-sub">Crowdsourced disease cluster alerts</div>
+          <div className="hero-stat-card">
+            <div className="hero-stat-val">Live</div>
+            <div className="hero-stat-lbl">Agmarknet Anchors</div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="hero-3d-placeholder" style={{ pointerEvents: 'none' }} />
+    </section>
   )
 }

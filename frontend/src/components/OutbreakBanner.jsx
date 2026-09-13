@@ -7,23 +7,25 @@ export default function OutbreakBanner({ outbreak }) {
 
   return (
     <div className="outbreak-banner" id="outbreak-banner">
-      <span style={{ fontSize: 22, flexShrink: 0 }}>🚨</span>
+      <div className="outbreak-icon">🚨</div>
       <div style={{ flex: 1 }}>
         <div className="outbreak-title">
-          Disease outbreak — {outbreak.crop} {outbreak.disease}
+          OUTBREAK ALERT — {outbreak.crop} {outbreak.disease}
         </div>
         <div className="outbreak-text">
-          {outbreak.count} cases near pincode <strong>{outbreak.pincode}</strong> in the last {outbreak.window_days} days.
-          Alert neighbouring farmers to inspect immediately.
+          {outbreak.count} cases detected near pincode <strong>{outbreak.pincode}</strong> in the
+          last {outbreak.window_days} days. Advise neighbouring farmers to inspect their crops immediately.
         </div>
       </div>
-      <button
+      <button 
         onClick={() => setDismissed(true)}
         style={{
-          background: 'none', border: 'none', color: 'var(--alert)',
+          background: 'none', border: 'none', color: 'var(--red-400)',
           fontSize: 18, cursor: 'pointer', padding: 4, alignSelf: 'flex-start',
-          lineHeight: 1, opacity: 0.6
+          opacity: 0.7, transition: 'opacity 0.2s', lineHeight: 1, marginTop: '-4px'
         }}
+        onMouseEnter={e => e.target.style.opacity = 1}
+        onMouseLeave={e => e.target.style.opacity = 0.7}
         aria-label="Close alert"
       >
         ✕
@@ -31,4 +33,3 @@ export default function OutbreakBanner({ outbreak }) {
     </div>
   )
 }
-
