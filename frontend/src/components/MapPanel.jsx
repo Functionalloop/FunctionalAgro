@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
 import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
+import { API } from '../api'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 // Fix marker icon paths in Vite
 import L from 'leaflet'

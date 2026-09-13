@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
+import { API, apiBase } from '../api'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
-const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
 
 // ── Time helper ────────────────────────────────────────────────────────────────
 function nowTime() {

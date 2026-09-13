@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
+import { API } from '../api'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 const CROPS = [
   { name: 'Wheat',     emoji: '🌾', hasMsp: true  },

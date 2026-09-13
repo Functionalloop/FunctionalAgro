@@ -2,8 +2,7 @@ import { useState, useRef } from 'react'
 import axios from 'axios'
 import * as tf from '@tensorflow/tfjs'
 import * as mobilenet from '@tensorflow-models/mobilenet'
-
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+import { API } from '../api'
 
 const LANGUAGES = [
   { value: 'english', label: '🇬🇧 English' },
@@ -11,6 +10,7 @@ const LANGUAGES = [
   { value: 'tamil',   label: '🌟 தமிழ் (Tamil)' },
   { value: 'telugu',  label: '🌟 తెలుగు (Telugu)' },
   { value: 'kannada', label: '🌟 ಕನ್ನಡ (Kannada)' },
+
   { value: 'marathi', label: '🌟 मराठी (Marathi)' },
   { value: 'bengali', label: '🌟 বাংলা (Bengali)' },
 ]

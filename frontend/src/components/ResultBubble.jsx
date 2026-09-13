@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { apiBase } from '../api'
 
 const SEVERITY_CLASS = {
   high:     'severity-high',
@@ -19,8 +20,8 @@ export default function ResultBubble({ result }) {
   const audioRef = useRef(null)
   const { diagnosis, zone, advisory } = result
 
-  const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'
   const audioUrl = advisory.audio_url ? `${apiBase}${advisory.audio_url}` : null
+
 
   function toggleAudio() {
     if (!audioRef.current) return
