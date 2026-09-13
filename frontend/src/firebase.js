@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { isSupported, getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -13,8 +13,21 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Analytics is optional — safely initialize only when supported
+// (avoids crashes in unsupported environments like SSR or restricted browsers)
+let analytics = null;
+isSupported().then((supported) => {
+  if (supported) {
+    analytics = getAnalytics(app);
+  }
+}).catch(() => {});
+
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// Force Google to always show the account picker
+provider.setCustomParameters({ prompt: "select_account" });
+
 export { app, analytics, auth, provider };
+
