@@ -2,66 +2,48 @@ export default function BentoGrid({ onSelectTab }) {
   const features = [
     {
       id: 'diagnose',
-      title: 'Crop Diagnosis',
-      desc: 'Upload a picture of your plant to instantly scan and diagnose over 38 disease categories with detailed recommendations.',
-      emoji: '🌿',
-      subEmoji: '🔍',
-      clayClass: 'clay-diagnose',
-      actionText: 'Open Diagnosis Cabin →',
+      tag: 'AI Powered',
+      tagClass: 'tag-green',
+      title: 'Crop Disease Diagnosis',
+      desc: 'Upload a photo of your plant leaf and our classifier identifies the disease from 38 categories — offline, on your device.',
+      cta: 'Start scanning',
     },
     {
       id: 'dalal',
-      title: 'Market Dalal',
-      desc: 'Negotiate the best price for your crops with 3 competitive traders anchored against real-time government Agmarknet prices.',
-      emoji: '📈',
-      subEmoji: '💰',
-      clayClass: 'clay-dalal',
-      actionText: 'Start Price Bidding →',
+      tag: 'Live Prices',
+      tagClass: 'tag-amber',
+      title: 'Market Price Negotiation',
+      desc: 'Three traders compete to buy your crop. Bids are anchored against live Agmarknet government wholesale prices.',
+      cta: 'Get a price',
     },
     {
       id: 'radar',
-      title: 'Outbreak Radar',
-      desc: 'Anonymous crowdsourced disease tracking map. Receive instant alerts if too many plant problems are detected in your area.',
-      emoji: '🚨',
-      subEmoji: '🗺️',
-      clayClass: 'clay-radar',
-      actionText: 'View Radar Map →',
+      tag: 'Crowdsourced',
+      tagClass: 'tag-red',
+      title: 'Disease Outbreak Radar',
+      desc: 'Anonymous disease reports build a real-time map. If too many cases cluster in your area, you get an early warning.',
+      cta: 'View radar',
     },
   ]
 
   return (
-    <section className="bento-section">
-      <h3 className="bento-title">Our Intelligent Ecosystem</h3>
-      <div className="bento-grid">
-        {features.map((f) => (
-          <div 
-            key={f.id} 
-            className={`glass-panel bento-card ${f.id === 'radar' ? 'radar-card' : ''}`}
-            onClick={() => onSelectTab(f.id)}
-            id={`bento-card-${f.id}`}
-          >
-            <div>
-              <div className="bento-icon-wrapper">
-                <div className={`clay-3d ${f.clayClass}`}>
-                  {f.emoji}
-                </div>
-                <div className="floating-sub">
-                  {f.subEmoji}
-                </div>
-              </div>
-
-              <div className="bento-info">
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            </div>
-
-            <div className="bento-action">
-              {f.actionText}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+    <div className="features-row" style={{ paddingTop: 40 }}>
+      {features.map((f) => (
+        <div
+          key={f.id}
+          className="feature-card"
+          onClick={() => onSelectTab(f.id)}
+          id={`feature-card-${f.id}`}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && onSelectTab(f.id)}
+        >
+          <span className={`feature-card-tag ${f.tagClass}`}>{f.tag}</span>
+          <h3 className="feature-card-title">{f.title}</h3>
+          <p className="feature-card-desc">{f.desc}</p>
+          <span className="feature-card-cta">{f.cta} →</span>
+        </div>
+      ))}
+    </div>
   )
 }
