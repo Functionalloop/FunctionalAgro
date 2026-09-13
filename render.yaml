@@ -8,8 +8,11 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
+      - key: PYTHONPATH
+        value: "."
       - key: GEMINI_API_KEY
         sync: false
       - key: DEMO_MODE
         value: "false"
+
 

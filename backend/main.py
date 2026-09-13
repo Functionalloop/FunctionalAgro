@@ -32,14 +32,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS — allow React dev server + production
+# CORS — allow React dev server + production Vercel frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Serve TTS audio files
 static_dir = os.path.join(os.path.dirname(__file__), "..", "static", "audio")
