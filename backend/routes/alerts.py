@@ -20,7 +20,11 @@ def subscribe_alert(req: AlertSubscribeRequest, user: dict = Depends(get_current
     Subscribes an authenticated farmer to an SMS alert for a specific crop and target price.
     Stores the alert in Firestore.
     """
+    if not db:
+        raise HTTPException(status_code=503, detail="Firebase Admin is not initialized on server. Please set FIREBASE_SERVICE_ACCOUNT environment variable.")
+
     uid = user.get("uid")
+
     if not uid:
         raise HTTPException(status_code=401, detail="User ID not found in token")
 
